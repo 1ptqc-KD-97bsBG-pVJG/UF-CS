@@ -27,4 +27,4 @@ game_num = 0
 while game_continue:
     #1. set up inital message
     game_num += 1
-    print(f"Start game {game_num}")
+    print(f'START GAME #{game_num}')
