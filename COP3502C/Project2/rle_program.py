@@ -42,8 +42,7 @@ def main():
             user_file = input('Enter the name of the file: ')
             # print(user_file)
             global image_data
-            image_data = ConsoleGfx.load_file(str(user_file))
-            print(image_data)
+            image_data = ConsoleGfx.load_file(user_file)
             # ConsoleGfx.load_file('testfiles/uga.gfx')
             menu_print()
         elif selection in ('2', 'load test image'):
