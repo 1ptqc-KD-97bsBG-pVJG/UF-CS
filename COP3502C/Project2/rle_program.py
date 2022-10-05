@@ -1,23 +1,10 @@
 from console_gfx import ConsoleGfx 
 import os
 
-#menu:
-# 0. Exit
-# 1. Load File
-# 2. Load Test Image
-# 3. Read RLE String
-# 4. Read RLE Hex String
-# 5. Read Data Hex String
-# 6. Display Image
-# 7. Display RLE String
-# 8. Display Hex RLE Data
-# 9. Display Hex Flat Data
-
-# Select a Menu Option:
 
 def main():
     global image_data
-    image_data = []
+    image_data = None
     def menu_print():
         print('RLE Menu')
         print('-' * 8)
@@ -40,10 +27,8 @@ def main():
             quit()
         elif selection in ('1', 'load file'):
             user_file = input('Enter the name of the file: ')
-            # print(user_file)
             global image_data
             image_data = ConsoleGfx.load_file(user_file)
-            # ConsoleGfx.load_file('testfiles/uga.gfx')
             menu_print()
         elif selection in ('2', 'load test image'):
             ConsoleGfx.display_image(ConsoleGfx.test_image)
