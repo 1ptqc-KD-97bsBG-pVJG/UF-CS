@@ -1,10 +1,12 @@
 from console_gfx import ConsoleGfx 
 import os
 
-
 def main():
+    # set initial conditions
     global image_data
     image_data = None
+    
+    # print menu function
     def menu_print():
         print('RLE Menu')
         print('-' * 8)
@@ -20,6 +22,7 @@ def main():
         print('9. Display Hex Flat Data')
         menu_select()
 
+    # prompt user for input and perform appropriate action
     def menu_select():
         selection = input('Select a Menu Option: ')
         if selection in ('0', 'exit'):
@@ -32,17 +35,13 @@ def main():
             menu_print()
         elif selection in ('2', 'load test image'):
             ConsoleGfx.display_image(ConsoleGfx.test_image)
-        
         elif selection in ('6', 'display image'):
             ConsoleGfx.display_image(image_data)
     
-    
-    
+    # run the program
     print('Welcome to the RLE image encoder!')
     ConsoleGfx.display_image(ConsoleGfx.test_rainbow)
     menu_print()
     
-
-
 if __name__ == '__main__':
     main()
