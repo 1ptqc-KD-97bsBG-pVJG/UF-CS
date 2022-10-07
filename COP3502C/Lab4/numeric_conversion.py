@@ -26,18 +26,24 @@ def main():
         # remove prefix
         if numeric_input[1] in ('x', 'b'):
             numeric_input = numeric_input[2:]
+        
+        # convert to list
+        input_list = list(map(int, numeric_input))
 
         if selection.lower() in ('1', 'decode hexadecimal'):
-            print(hex_char_decode(numeric_input))
+            print(hex_char_decode(input_list))
         elif selection.lower() in ('2', 'decode binary'):
-            print(hex_string_decode(numeric_input))
+            print(hex_string_decode(input_list))
         elif selection.lower() in ('3', 'convert binary to hexadecimal'):
-            print(binary_string_decode(numeric_input))
+            print(binary_string_decode(input_list))
         elif selection.lower() in ('4', 'quit'):
             quit()
     
     def hex_char_decode(digit):
-        print('temp')
+        result = 0
+        for i in range(0, len(digit)):
+            result += digit[i] * 16 ** (len(digit) - 1 - i)
+        return result
 
     def hex_string_decode(hex):
         print('temp')
@@ -47,6 +53,8 @@ def main():
 
     def binary_to_hex(binary):
         print('temp')
+
+    menu()
 
 
 
