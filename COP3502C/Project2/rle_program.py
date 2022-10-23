@@ -91,6 +91,7 @@ def to_rle_string(rle_data):
             continue
     return result
 
+# Translates a string in human-readable RLE format (with delimiters) into RLE byte data.
 def string_to_rle(rle_string):
     result = []
     raw_list = rle_string.split(":")
@@ -122,22 +123,21 @@ def main():
         print('6. Display Image')
         print('7. Display RLE String')
         print('8. Display Hex RLE Data')
-        print('9. Display Hex Flat Data')
+        print('9. Display Hex Flat Data\n')
         menu_select()
 
     # prompt user for input and perform appropriate action
     def menu_select():
         selection = input('Select a Menu Option: ').lower()
         if selection in ('0', 'exit'):
-            print('THIS IS A TEMPORARY EXIT MESSAGE')
             quit()
         elif selection in ('1', 'load file'):
-            user_file = input('Enter the name of the file: ')
+            user_file = input('Enter name of file to load: ')
             global image_data
             image_data = ConsoleGfx.load_file(user_file)
-            print(image_data)
         elif selection in ('2', 'load test image'):
-            ConsoleGfx.display_image(ConsoleGfx.test_image)
+            print('Test image data loaded.')
+            image_data = ConsoleGfx.test_image
         elif selection in ('3', 'read rle string'):
             user_input = input('Enter an RLE string to be decoded: ')
             # translate to RLE format, then decode
@@ -148,13 +148,14 @@ def main():
             image_data = decode_rle(string_to_data(user_input))
         elif selection in ('5', 'read data hex string'):
             user_input = input('Enter the hex string holding flat data: ')
+            # translate from flat hex
             image_data = string_to_data(user_input)
         elif selection in ('6', 'display image'):
+            print('Displaying image...')
             ConsoleGfx.display_image(image_data)
-            quit()
         elif selection in ('7', 'display rle string'):
             # encode image data to RLE, then convert to human-readable RLE format
-            print(f'RLE hex values: {to_rle_string(encode_rle(image_data))}')
+            print(f'RLE representation: {to_rle_string(encode_rle(image_data))}')
         elif selection in ('8', 'display hex rle data'):
             # encode image data to RLE, then convert to hex
             print(f'RLE hex values: {to_hex_string(encode_rle(image_data))}')
@@ -164,8 +165,10 @@ def main():
         menu_print()
     
     # run the program
-    print('Welcome to the RLE image encoder!')
+    print('Welcome to the RLE image encoder!\n')
+    print('Displaying Spectrum Image:')
     ConsoleGfx.display_image(ConsoleGfx.test_rainbow)
+    print('\n')
     menu_print()
     
 if __name__ == '__main__':
