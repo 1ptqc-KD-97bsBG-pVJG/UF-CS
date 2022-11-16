@@ -1,6 +1,6 @@
 import pakuri
 
-class Pakudex:
+class pakudex:
     def __init__(self, capacity=20):
         # intitalize Pakudex object
         self.capacity = capacity
@@ -38,7 +38,7 @@ class Pakudex:
     
     def add_pakuri(self, species):
         # add Pakuri object to species_array
-        self.species_array.append(pakuri.Pakuri(species))
+        self.species_array.append(pakuri.pakuri(species))
     
     def evolve_species(self, species):
         # try to evolve species

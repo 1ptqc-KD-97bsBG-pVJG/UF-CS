@@ -19,7 +19,7 @@ def main():
     print(f'The Pakudex can hold {capacity} species of Pakuri.')
 
     # create Pakudex object
-    collection = pakudex.Pakudex(capacity)
+    collection = pakudex.pakudex(capacity)
 
 
     # main menu function
