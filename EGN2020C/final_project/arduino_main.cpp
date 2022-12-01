@@ -17,12 +17,14 @@ int led1 = 11;
 int led2 = 12;
 int led3 = 13;
 
+// set display pins here
+
+
 // set input variables
 bool option_button_pressed = false;
 int option_button_last_state = LOW;
 int option_button_current_state;
 
-// set display pins here
 
 // set environment variables
 int current_mode = 0; // 0 = free_play, 1 = pattern_game, 2 = timed_game
@@ -30,6 +32,8 @@ bool game_in_progress = false;
 bool advanced_mode_active = false;
 
 const int SHORT_PRESS_TIME = 500; // 500 milliseconds
+
+// set 
 
 void setup() {
     Serial.begin(9600);
@@ -56,6 +60,19 @@ void loop() {
                 } else {
                     current_mode++;
                 }
+                // activate current mode
+                switch (current_mode) {
+                    case 0:
+                        // free play mode
+                        break;
+                    case 1:
+                        // pattern game mode
+                        break;
+                    case 2:
+                        // timed game mode
+                        break;
+                }
+
             } else {
                 // TODO: display error message 'can't change modes while game in progress!'
             }
