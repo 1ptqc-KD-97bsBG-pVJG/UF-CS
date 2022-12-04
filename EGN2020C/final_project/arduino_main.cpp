@@ -6,8 +6,14 @@ int nail1 = 22;
 int nail2 = 24;
 int nail3 = 26;
 
-char screw1[] = "A8";
-char screw2[] = "A9";
+// char screw1[3];
+// screw1[0] = 'A';
+// screw1[1] = '8';
+// screw1[2] = 0;
+// char screw1[] = "A8";
+int screw1 = A8;
+int screw2 = A9;
+// this is incorrect
 int screw3 = 26;
 
 int option_button = 8;
@@ -93,6 +99,15 @@ void loop() {
         analogWrite(rgb_led1_green, 0);
         analogWrite(rgb_led1_blue, 0);
     }
+
+    int potentiometer1_value = analogRead(screw1);
+    int rgb2_value = map(potentiometer1_value, 0, 1023, 0, 1535);
+    int arr[3];
+    rgb_value_separator(rgb2_value, arr);
+    
+    analogWrite(rgb_led2_red, arr[0]);
+    analogWrite(rgb_led2_green, arr[1]);
+    analogWrite(rgb_led2_blue, arr[2]);
 
 
 
