@@ -26,8 +26,8 @@ int rgb_led3_red = 8;
 int rgb_led3_green = 9;
 int rgb_led3_blue = 10;
 
-int led4 = 30;
-int led5 = 32;
+int led4 = 34;
+int led5 = 35;
 int led6;
 
 // set display pins here
@@ -63,9 +63,11 @@ void setup() {
     pinMode(rgb_led1_red, OUTPUT);
     pinMode(rgb_led1_green, OUTPUT);
     pinMode(rgb_led1_blue, OUTPUT);
+    
     pinMode(rgb_led2_red, OUTPUT);
     pinMode(rgb_led2_green, OUTPUT);
     pinMode(rgb_led2_blue, OUTPUT);
+   
     pinMode(rgb_led3_red, OUTPUT);
     pinMode(rgb_led3_green, OUTPUT);
     pinMode(rgb_led3_blue, OUTPUT);
@@ -83,15 +85,15 @@ void setup() {
 
 
 void loop() {
-    int button_status = 0;
-    int pin_value = digitalRead(nail1);
-    delay(10);
-    if (button_status != pin_value) {
-      button_status = pin_value;
-      Serial.println(button_status);
-    }
+    // int button_status = 0;
+    // int pin_value = digitalRead(nail1);
+    // delay(10);
+    // if (button_status != pin_value) {
+    //   button_status = pin_value;
+    //   Serial.println(button_status);
+    // }
     
-    Serial.println(digitalRead(nail1));
+    Serial.println(digitalRead(nail2));
     // Serial.println(digitalRead(nail2));
     // Serial.println(digitalRead(nail3));
     // Serial.println(digitalRead(option_button));
@@ -109,23 +111,15 @@ void loop() {
 
     // temporary code to test button press
     if (digitalRead(nail1) == LOW) {
-        analogWrite(rgb_led1_red, 43);
-        analogWrite(rgb_led1_green, 123);
-        analogWrite(rgb_led1_blue, 54);
+        digitalWrite(led4, HIGH);
     } else {
-        analogWrite(rgb_led1_red, 0);
-        analogWrite(rgb_led1_green, 0);
-        analogWrite(rgb_led1_blue, 0);
+        digitalWrite(led4, LOW);
     }
 
     if (digitalRead(nail2) == LOW) {
-        analogWrite(rgb_led2_red, 34);
-        analogWrite(rgb_led2_green, 245);
-        analogWrite(rgb_led2_blue, 93);
+        digitalWrite(led5, HIGH);
     } else {
-        analogWrite(rgb_led2_red, 0);
-        analogWrite(rgb_led2_green, 0);
-        analogWrite(rgb_led2_blue, 0);
+        digitalWrite(led5, LOW);
     }
 
 
@@ -200,33 +194,30 @@ int free_play() {
     
     
     // turn on led when nail is hit
-    if (digitalRead(nail1) == HIGH) {
-        analogWrite(rgb_led1_red, 255);
-        analogWrite(rgb_led1_green, 0);
+        if (digitalRead(nail1) == LOW) {
+        analogWrite(rgb_led1_red, 0);
+        analogWrite(rgb_led1_green, 255);
         analogWrite(rgb_led1_blue, 0);
-        lifetime_nails_hit++;
     } else {
         analogWrite(rgb_led1_red, 0);
         analogWrite(rgb_led1_green, 0);
         analogWrite(rgb_led1_blue, 0);
     }
 
-    if (digitalRead(nail2) == HIGH) {
-        analogWrite(rgb_led2_red, 255);
-        analogWrite(rgb_led2_green, 0);
-        analogWrite(rgb_led2_blue, 0);
-        lifetime_nails_hit++;
+    if (digitalRead(nail2) == LOW) {
+        analogWrite(rgb_led2_red, 34);
+        analogWrite(rgb_led2_green, 245);
+        analogWrite(rgb_led2_blue, 93);
     } else {
         analogWrite(rgb_led2_red, 0);
         analogWrite(rgb_led2_green, 0);
         analogWrite(rgb_led2_blue, 0);
     }
 
-    if (digitalRead(nail3) == HIGH) {
-        analogWrite(rgb_led3_red, 255);
-        analogWrite(rgb_led3_green, 0);
-        analogWrite(rgb_led3_blue, 0);
-        lifetime_nails_hit++;
+    if (digitalRead(nail3) == LOW) {
+        analogWrite(rgb_led3_red, 34);
+        analogWrite(rgb_led3_green, 245);
+        analogWrite(rgb_led3_blue, 93);
     } else {
         analogWrite(rgb_led3_red, 0);
         analogWrite(rgb_led3_green, 0);
