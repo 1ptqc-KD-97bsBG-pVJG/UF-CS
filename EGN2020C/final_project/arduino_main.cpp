@@ -201,36 +201,39 @@ int free_play() {
      
     
     
-    // turn on led when nail is hit
-        if (digitalRead(nail1) == LOW) {
-        analogWrite(rgb_led1_red, 0);
-        analogWrite(rgb_led1_green, 255);
-        analogWrite(rgb_led1_blue, 0);
-    } else {
-        analogWrite(rgb_led1_red, 0);
-        analogWrite(rgb_led1_green, 0);
-        analogWrite(rgb_led1_blue, 0);
-    }
+    // turn on simple led when nail is hit
+    if (digitalRead(nail1) == LOW) {
+            digitalWrite(led4, HIGH);
+        } else {
+            digitalWrite(led4, LOW);
+        }
 
-    if (digitalRead(nail2) == LOW) {
-        analogWrite(rgb_led2_red, 34);
-        analogWrite(rgb_led2_green, 245);
-        analogWrite(rgb_led2_blue, 93);
-    } else {
-        analogWrite(rgb_led2_red, 0);
-        analogWrite(rgb_led2_green, 0);
-        analogWrite(rgb_led2_blue, 0);
-    }
+        if (digitalRead(nail2) == LOW) {
+            digitalWrite(led5, HIGH);
+        } else {
+            digitalWrite(led5, LOW);
+        }
 
-    if (digitalRead(nail3) == LOW) {
-        analogWrite(rgb_led3_red, 34);
-        analogWrite(rgb_led3_green, 245);
-        analogWrite(rgb_led3_blue, 93);
-    } else {
-        analogWrite(rgb_led3_red, 0);
-        analogWrite(rgb_led3_green, 0);
-        analogWrite(rgb_led3_blue, 0);
-    }
+    
+    int potentiometer2_value = analogRead(screw2);
+    int rgb2_value = map(potentiometer2_value, 0, 1023, 0, 1535);
+    int rgb2_arr[3];
+    rgb_value_separator(rgb2_value, rgb2_arr);
+    
+    analogWrite(rgb_led2_red, rgb2_arr[0]);
+    analogWrite(rgb_led2_green, rgb2_arr[1]);
+    analogWrite(rgb_led2_blue, rgb2_arr[2]);
+
+    int potentiometer3_value = analogRead(screw3);
+    int rgb3_value = map(potentiometer3_value, 0, 1023, 0, 1535);
+    int rgb3_arr[3];
+    rgb_value_separator(rgb3_value, rgb3_arr);
+    
+    analogWrite(rgb_led3_red, rgb3_arr[0]);
+    analogWrite(rgb_led3_green, rgb3_arr[1]);
+    analogWrite(rgb_led3_blue, rgb3_arr[2]);
+
+
 }
 
 
