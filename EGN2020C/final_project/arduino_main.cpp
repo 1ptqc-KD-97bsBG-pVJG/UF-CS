@@ -124,15 +124,23 @@ void loop() {
 
 
 
-    int potentiometer1_value = analogRead(screw2);
-    int rgb3_value = map(potentiometer1_value, 0, 1023, 0, 1535);
-    int arr[3];
-    rgb_value_separator(rgb3_value, arr);
+    int potentiometer2_value = analogRead(screw2);
+    int rgb2_value = map(potentiometer2_value, 0, 1023, 0, 1535);
+    int rgb2_arr[3];
+    rgb_value_separator(rgb2_value, rgb2_arr);
     
-    analogWrite(rgb_led3_red, arr[0]);
-    analogWrite(rgb_led3_green, arr[1]);
-    analogWrite(rgb_led3_blue, arr[2]);
+    analogWrite(rgb_led2_red, rgb2_arr[0]);
+    analogWrite(rgb_led2_green, rgb2_arr[1]);
+    analogWrite(rgb_led2_blue, rgb2_arr[2]);
 
+    int potentiometer3_value = analogRead(screw3);
+    int rgb3_value = map(potentiometer3_value, 0, 1023, 0, 1535);
+    int rgb3_arr[3];
+    rgb_value_separator(rgb3_value, rgb3_arr);
+    
+    analogWrite(rgb_led3_red, rgb3_arr[0]);
+    analogWrite(rgb_led3_green, rgb3_arr[1]);
+    analogWrite(rgb_led3_blue, rgb3_arr[2]);
 
 
 
