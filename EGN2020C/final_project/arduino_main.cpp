@@ -11,8 +11,8 @@ int nail3 = 26;
 // screw1[1] = '8';
 // screw1[2] = 0;
 // char screw1[] = "A8";
-int screw1 = A8;
-int screw2 = A9;
+int screw1 = A15;
+int screw2 = A14;
 // this is incorrect
 int screw3 = 26;
 
