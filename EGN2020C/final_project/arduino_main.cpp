@@ -33,13 +33,21 @@ int led6;
 // set display pins here
 // TODO: add display pins
 
-// set input variables
+// set internal tracking variables
+// option button (short & long press detection)
 bool option_button_is_pressing = false;
 bool option_button_is_long_detected = false;
 unsigned long option_button_pressed_time = 0;
 int option_button_last_state = LOW;
 int option_button_current_state;
 bool passed_startup = false;
+// nails (short press detection)
+int nail1_last_state = HIGH;
+int nail1_current_state;
+int nail2_last_state = HIGH;
+int nail2_current_state;
+int nail3_last_state = HIGH;
+int nail3_current_state;
 
 
 // set environment variables
@@ -89,59 +97,6 @@ void setup() {
 
 
 void loop() {
-    // int button_status = 0;
-    // int pin_value = digitalRead(nail1);
-    // delay(10);
-    // if (button_status != pin_value) {
-    //   button_status = pin_value;
-    //   Serial.println(button_status);
-    // }
-    
-    // Serial.println(digitalRead(nail2));
-    // Serial.println(digitalRead(nail2));
-    // Serial.println(digitalRead(nail3));
-    // Serial.println(digitalRead(option_button));
-    
-    // Serial.println('screw2:');
-    // Serial.println(analogRead(screw2));
-    // Serial.println('screw3:');
-    // Serial.println(analogRead(screw3));
-
-
-    // temporary code to test button press
-    if (digitalRead(nail1) == LOW) {
-        digitalWrite(led4, HIGH);
-    } else {
-        digitalWrite(led4, LOW);
-    }
-
-    if (digitalRead(nail2) == LOW) {
-        digitalWrite(led5, HIGH);
-    } else {
-        digitalWrite(led5, LOW);
-    }
-
-
-
-    int potentiometer2_value = analogRead(screw2);
-    int rgb2_value = map(potentiometer2_value, 0, 1023, 0, 1535);
-    int rgb2_arr[3];
-    rgb_value_separator(rgb2_value, rgb2_arr);
-    
-    analogWrite(rgb_led2_red, rgb2_arr[0]);
-    analogWrite(rgb_led2_green, rgb2_arr[1]);
-    analogWrite(rgb_led2_blue, rgb2_arr[2]);
-
-    int potentiometer3_value = analogRead(screw3);
-    int rgb3_value = map(potentiometer3_value, 0, 1023, 0, 1535);
-    int rgb3_arr[3];
-    rgb_value_separator(rgb3_value, rgb3_arr);
-    
-    analogWrite(rgb_led3_red, rgb3_arr[0]);
-    analogWrite(rgb_led3_green, rgb3_arr[1]);
-    analogWrite(rgb_led3_blue, rgb3_arr[2]);
-
-
 
     option_button_current_state = digitalRead(option_button);
 
@@ -180,6 +135,7 @@ void loop() {
             option_button_is_long_detected = true;
             // toggle advanced mode
             advanced_mode_active = !advanced_mode_active;
+            
             if (advanced_mode_active == true) {
                 Serial.println("Advanced mode on!");
             } else {
@@ -188,7 +144,6 @@ void loop() {
             // TODO: display message 'advanced mode on' or 'advanced mode off'
         }
     }
-
     option_button_last_state = option_button_current_state;
 
     // activate current mode
@@ -211,26 +166,49 @@ int free_play() {
     game_in_progress = false;
      
     // turn on simple led when nail is hit
-    if (digitalRead(nail1) == LOW) {
+        // nail 1
+        nail1_current_state = digitalRead(nail1);
+        if (nail1_last_state == HIGH && nail1_current_state == LOW) {
+            // nail was just hit
             digitalWrite(led4, HIGH);
             lifetime_nails_hit++;
-        } else {
+            Serial.println("Total nails hit:");
+            Serial.println(lifetime_nails_hit);
+        } else if (nail1_last_state == LOW && nail1_current_state == HIGH) {
+            // nail was just released
             digitalWrite(led4, LOW);
         }
+        nail1_last_state = nail1_current_state;
 
-        if (digitalRead(nail2) == LOW) {
+        // nail 2
+        nail2_current_state = digitalRead(nail2);
+        if (nail2_last_state == HIGH && nail2_current_state == LOW) {
+            // nail was just hit
             digitalWrite(led5, HIGH);
             lifetime_nails_hit++;
-        } else {
+            Serial.println("Total nails hit:");
+            Serial.println(lifetime_nails_hit);
+        } else if (nail2_last_state == LOW && nail2_current_state == HIGH) {
+            // nail was just released
             digitalWrite(led5, LOW);
         }
+        nail2_last_state = nail2_current_state;
 
-        if (digitalRead(nail3) == LOW) {
+        // nail 3
+        nail3_current_state = digitalRead(nail3);
+        if (nail3_last_state == HIGH && nail3_current_state == LOW) {
+            // nail was just hit
             digitalWrite(led6, HIGH);
             lifetime_nails_hit++;
-        } else {
+            Serial.println("Total nails hit:");
+            Serial.println(lifetime_nails_hit);
+        } else if (nail3_last_state == LOW && nail3_current_state == HIGH) {
+            // nail was just released
             digitalWrite(led6, LOW);
         }
+        nail3_last_state = nail3_current_state;
+    
+
 
     // change rgb led values based on potentiometer values
     int potentiometer2_value = analogRead(screw2);
@@ -250,7 +228,6 @@ int free_play() {
     analogWrite(rgb_led3_red, rgb3_arr[0]);
     analogWrite(rgb_led3_green, rgb3_arr[1]);
     analogWrite(rgb_led3_blue, rgb3_arr[2]);
-
 
 }
 
