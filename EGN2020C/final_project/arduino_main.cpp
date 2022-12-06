@@ -1,3 +1,7 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
 // declare variables
 
 // consider changing these ints to bytes to save memory and / or moving to a .h file
@@ -300,15 +304,112 @@ void pattern_game() {
             digitalWrite(led6, LOW);
             game_in_progress = true;
         }
-        // previous_millis = current_millis;
-        Serial.println(current_millis - previous_millis);
     }
     if (game_in_progress == false) {
         return;
     }
     
     // game start (mode cannot be changed now)
-    Serial.println("Game started!");
+    
+    // generate pattern
+    int i;
+    int pattern[6];
+    for (i = 0; i < 6; i++) {
+        pattern[i] = i;
+    }
+    // randomize pattern
+    // shuffle(pattern, 6);
+    size_t i;
+        srand(time(NULL));
+        for (i = 0; i < 6 - 1; i++) {
+            size_t j = i + rand() / (RAND_MAX / (6 - i) + 1);
+            int t = pattern[j];
+            pattern[j] = pattern[i];
+            pattern[i] = t;
+        }
+    
+    for (i = 0; i < 6; i++) {
+        Serial.println(pattern[i]);
+    }
+    // initialize random rgb values
+    int random_rgb1_red;
+    int random_rgb1_green;
+    int random_rgb1_blue;
+    int random_rgb2_red;
+    int random_rgb2_green;
+    int random_rgb2_blue;
+    int random_rgb3_red;
+    int random_rgb3_green;
+    int random_rgb3_blue;
+
+    int pattern_length = 6;
+    if (!advanced_mode_active) {
+        pattern[3] = 9;
+        pattern[4] = 9;
+        pattern[5] = 9;
+        pattern_length = 3;
+    }
+
+    
+
+    // display pattern
+    delay(1000);
+    for (i = 0; i < pattern_length; i++) {
+        switch (pattern[i]) {
+            case 0:
+                random_rgb1_red = rand() % 254 + 1;
+                random_rgb1_green = rand() % 254 + 1;
+                random_rgb1_blue = rand() % 254 + 1;
+                analogWrite(rgb_led1_red, random_rgb1_red);
+                analogWrite(rgb_led1_green, random_rgb1_green);
+                analogWrite(rgb_led1_blue, random_rgb1_blue);
+                break;
+            case 1:
+                random_rgb2_red = rand() % 254 + 1;
+                random_rgb2_green = rand() % 254 + 1;
+                random_rgb2_blue = rand() % 254 + 1;
+                analogWrite(rgb_led2_red, random_rgb2_red);
+                analogWrite(rgb_led2_green, random_rgb2_green);
+                analogWrite(rgb_led2_blue, random_rgb2_blue);
+                break;
+            case 2:
+                random_rgb3_red = rand() % 254 + 1;
+                random_rgb3_green = rand() % 254 + 1;
+                random_rgb3_blue = rand() % 254 + 1;
+                analogWrite(rgb_led3_red, random_rgb3_red);
+                analogWrite(rgb_led3_green, random_rgb3_green);
+                analogWrite(rgb_led3_blue, random_rgb3_blue);
+                break;
+            case 3:
+                digitalWrite(led4, HIGH);
+                break;
+            case 4:
+                digitalWrite(led5, HIGH);
+                break;
+            case 5:
+                digitalWrite(led6, HIGH);
+                break;
+            default:
+                break;
+        }
+        delay(2000);
+    }
+
+
+
+    analogWrite(rgb_led1_red, 0);
+    analogWrite(rgb_led1_green, 0);
+    analogWrite(rgb_led1_blue, 0);
+    analogWrite(rgb_led2_red, 0);
+    analogWrite(rgb_led2_green, 0);
+    analogWrite(rgb_led2_blue, 0);
+    analogWrite(rgb_led3_red, 0);
+    analogWrite(rgb_led3_green, 0);
+    analogWrite(rgb_led3_blue, 0);
+    digitalWrite(led4, LOW);
+    digitalWrite(led5, LOW);
+    digitalWrite(led6, LOW);
+
     current_mode = 0;
 
 
@@ -319,6 +420,21 @@ void timed_game() {
 
 }
 
+// void shuffle(int *arr, size_t n)
+// {
+//     if (n > 1) 
+//     {
+//         size_t i;
+//         srand(time(NULL));
+//         for (i = 0; i < n - 1; i++) 
+//         {
+//           size_t j = i + rand() / (RAND_MAX / (n - i) + 1);
+//           int t = arr[j];
+//           arr[j] = arr[i];
+//           arr[i] = t;
+//         }
+//     }
+// }
 
 void rgb_value_separator(int rgb_value, int arr[]) {
     int red;
