@@ -34,20 +34,21 @@ int led6;
 // TODO: add display pins
 
 // set internal tracking variables
-// option button (short & long press detection)
-bool option_button_is_pressing = false;
-bool option_button_is_long_detected = false;
-unsigned long option_button_pressed_time = 0;
-int option_button_last_state = LOW;
-int option_button_current_state;
-bool passed_startup = false;
-// nails (short press detection)
-int nail1_last_state = HIGH;
-int nail1_current_state;
-int nail2_last_state = HIGH;
-int nail2_current_state;
-int nail3_last_state = HIGH;
-int nail3_current_state;
+    // option button (short & long press detection)
+    bool option_button_is_pressing = false;
+    bool option_button_is_long_detected = false;
+    unsigned long option_button_pressed_time = 0;
+    int option_button_last_state = LOW;
+    int option_button_current_state;
+    bool passed_startup = false;
+    
+    // nails (short press detection)
+    int nail1_last_state = HIGH;
+    int nail1_current_state;
+    int nail2_last_state = HIGH;
+    int nail2_current_state;
+    int nail3_last_state = HIGH;
+    int nail3_current_state;
 
 
 // set environment variables
@@ -114,11 +115,11 @@ void loop() {
             if (!game_in_progress) {
                 if (current_mode == 2) {
                     current_mode = 0;
+                    indicate_gamemode_change();
                 } else {
                     current_mode++;
+                    indicate_gamemode_change();
                 }
-                Serial.println("Mode changed!");
-                Serial.println(current_mode);
             } else {
                 // TODO: display error message 'can't change modes while game in progress!'
                 Serial.println("Can't change modes while game in progress!");
@@ -154,6 +155,7 @@ void loop() {
                 break;
             case 1:
                 // pattern game mode
+                pattern_game();
                 break;
             case 2:
                 // timed game mode
@@ -208,8 +210,6 @@ int free_play() {
         }
         nail3_last_state = nail3_current_state;
     
-
-
     // change rgb led values based on potentiometer values
     int potentiometer2_value = analogRead(screw2);
     int rgb2_value = map(potentiometer2_value, 0, 1023, 0, 1535);
@@ -228,6 +228,15 @@ int free_play() {
     analogWrite(rgb_led3_red, rgb3_arr[0]);
     analogWrite(rgb_led3_green, rgb3_arr[1]);
     analogWrite(rgb_led3_blue, rgb3_arr[2]);
+
+}
+
+
+void pattern_game() {
+    game_in_progress = false;
+
+
+
 
 }
 
@@ -266,4 +275,161 @@ void rgb_value_separator(int rgb_value, int arr[]) {
     arr[0] = red;
     arr[1] = blue;
     arr[2] = green;
+}
+
+void indicate_gamemode_change() {
+    if (advanced_mode_active) {
+        // TODO: display message 'gamemode changed to <gamemode>'
+    } else {
+        Serial.println("Flashing rgb leds to indicate gamemode change");
+        Serial.println("Gamemode to flash:");
+        Serial.println(current_mode);
+        switch (current_mode) {
+            case 0:
+                Serial.println("Free play mode");
+                // free play mode
+                    // flash rgb leds purple
+                        // set to off
+                        analogWrite(rgb_led1_red, 0);
+                        analogWrite(rgb_led1_green, 0);
+                        analogWrite(rgb_led1_blue, 0);
+                        
+                        analogWrite(rgb_led2_red, 0);
+                        analogWrite(rgb_led2_green, 0);
+                        analogWrite(rgb_led2_blue, 0);
+
+                        analogWrite(rgb_led3_red, 0);
+                        analogWrite(rgb_led3_green, 0);
+                        analogWrite(rgb_led3_blue, 0);
+                        delay(100);
+
+                        // set all to purple
+                        analogWrite(rgb_led1_red, 186);
+                        analogWrite(rgb_led1_green, 85);
+                        analogWrite(rgb_led1_blue, 211);
+                        
+                        analogWrite(rgb_led2_red, 186);
+                        analogWrite(rgb_led2_green, 85);
+                        analogWrite(rgb_led2_blue, 211);
+
+                        analogWrite(rgb_led3_red, 186);
+                        analogWrite(rgb_led3_green, 85);
+                        analogWrite(rgb_led3_blue, 211);
+                        delay(500);
+
+                        // set all to off
+                        analogWrite(rgb_led1_red, 0);
+                        analogWrite(rgb_led1_green, 0);
+                        analogWrite(rgb_led1_blue, 0);
+
+                        analogWrite(rgb_led2_red, 0);
+                        analogWrite(rgb_led2_green, 0);
+                        analogWrite(rgb_led2_blue, 0);
+
+                        analogWrite(rgb_led3_red, 0);
+                        analogWrite(rgb_led3_green, 0);
+                        analogWrite(rgb_led3_blue, 0);
+                        delay(300);
+
+                        return;
+
+            case 1:
+                Serial.println("Pattern game mode");
+                // pattern game mode
+                    // flash rgb leds blue
+                        // set all to off
+                        digitalWrite(rgb_led1_red, LOW);
+                        digitalWrite(rgb_led1_green, LOW);
+                        digitalWrite(rgb_led1_blue, LOW);
+
+                        digitalWrite(rgb_led2_red, LOW);
+                        digitalWrite(rgb_led2_green, LOW);
+                        digitalWrite(rgb_led2_blue, LOW);
+
+                        digitalWrite(rgb_led3_red, LOW);
+                        digitalWrite(rgb_led3_green, LOW);
+                        digitalWrite(rgb_led3_blue, LOW);
+                        delay(100);
+
+                        // set all to blue
+                        analogWrite(rgb_led1_red, 0);
+                        analogWrite(rgb_led1_green, 0);
+                        analogWrite(rgb_led1_blue, 255);
+
+                        analogWrite(rgb_led2_red, 0);
+                        analogWrite(rgb_led2_green, 0);
+                        analogWrite(rgb_led2_blue, 255);
+
+                        analogWrite(rgb_led3_red, 0);
+                        analogWrite(rgb_led3_green, 0);
+                        analogWrite(rgb_led3_blue, 255);
+                        delay(500);
+
+                        // set all to off
+                        digitalWrite(rgb_led1_red, LOW);
+                        digitalWrite(rgb_led1_green, LOW);
+                        digitalWrite(rgb_led1_blue, LOW);
+
+                        digitalWrite(rgb_led2_red, LOW);
+                        digitalWrite(rgb_led2_green, LOW);
+                        digitalWrite(rgb_led2_blue, LOW);
+
+                        digitalWrite(rgb_led3_red, LOW);
+                        digitalWrite(rgb_led3_green, LOW);
+                        digitalWrite(rgb_led3_blue, LOW);
+                        delay(100);
+
+                        return;
+
+            case 2:
+                Serial.println("Timed game mode");
+                // timed game mode
+                    // flash rgb leds red
+                        // set all to off
+                        digitalWrite(rgb_led1_red, LOW);
+                        digitalWrite(rgb_led1_green, LOW);
+                        digitalWrite(rgb_led1_blue, LOW);
+
+                        digitalWrite(rgb_led2_red, LOW);
+                        digitalWrite(rgb_led2_green, LOW);
+                        digitalWrite(rgb_led2_blue, LOW);
+
+                        digitalWrite(rgb_led3_red, LOW);
+                        digitalWrite(rgb_led3_green, LOW);
+                        digitalWrite(rgb_led3_blue, LOW);
+                        delay(100);
+
+                        // set all to red
+                        analogWrite(rgb_led1_red, 255);
+                        analogWrite(rgb_led1_green, 0);
+                        analogWrite(rgb_led1_blue, 0);
+
+                        analogWrite(rgb_led2_red, 255);
+                        analogWrite(rgb_led2_green, 0);
+                        analogWrite(rgb_led2_blue, 0);
+
+                        analogWrite(rgb_led3_red, 255);
+                        analogWrite(rgb_led3_green, 0);
+                        analogWrite(rgb_led3_blue, 0);
+                        delay(500);
+
+                        // set all to off
+                        digitalWrite(rgb_led1_red, LOW);
+                        digitalWrite(rgb_led1_green, LOW);
+                        digitalWrite(rgb_led1_blue, LOW);
+
+                        digitalWrite(rgb_led2_red, LOW);
+                        digitalWrite(rgb_led2_green, LOW);
+                        digitalWrite(rgb_led2_blue, LOW);
+
+                        digitalWrite(rgb_led3_red, LOW);
+                        digitalWrite(rgb_led3_green, LOW);
+                        digitalWrite(rgb_led3_blue, LOW);
+                        delay(100);
+                            
+
+                        return;
+
+        }           
+    }
 }
