@@ -28,7 +28,7 @@ int rgb_led3_blue = 10;
 
 int led4 = 34;
 int led5 = 35;
-int led6;
+int led6 = 36;
 
 // set display pins here
 // TODO: add display pins
@@ -159,6 +159,7 @@ void loop() {
                 break;
             case 2:
                 // timed game mode
+                timed_game();
                 break;
         }
 
@@ -211,6 +212,15 @@ int free_play() {
         nail3_last_state = nail3_current_state;
     
     // change rgb led values based on potentiometer values
+    int potentiometer1_value = analogRead(screw1);
+    int rgb1_value = map(potentiometer1_value, 0, 1023, 0, 1535);
+    int rgb1_arr[3];
+    rgb_value_separator(rgb1_value, rgb1_arr);
+    
+    analogWrite(rgb_led1_red, rgb1_arr[0]);
+    analogWrite(rgb_led1_green, rgb1_arr[1]);
+    analogWrite(rgb_led1_blue, rgb1_arr[2]);
+    
     int potentiometer2_value = analogRead(screw2);
     int rgb2_value = map(potentiometer2_value, 0, 1023, 0, 1535);
     int rgb2_arr[3];
@@ -235,8 +245,77 @@ int free_play() {
 void pattern_game() {
     game_in_progress = false;
 
+    // count down to game start while allowing mode change
+    unsigned long previous_millis = millis();
+    while (digitalRead(option_button) == HIGH && game_in_progress == false) {
+        unsigned long current_millis = millis();
+        if (current_millis - previous_millis > 500) {
+            analogWrite(rgb_led1_red, 255);
+            analogWrite(rgb_led1_green, 0);
+            analogWrite(rgb_led1_blue, 0);
+        }
+        if (current_millis - previous_millis > 1000) {
+            analogWrite(rgb_led2_red, 158);
+            analogWrite(rgb_led2_green, 208);
+            analogWrite(rgb_led2_blue, 10);
+        }
+        if (current_millis - previous_millis > 1500) {
+            analogWrite(rgb_led3_red, 0);
+            analogWrite(rgb_led3_green, 255);
+            analogWrite(rgb_led3_blue, 0);
+        }
+        if (current_millis - previous_millis > 2000) {
+            // turn all off and trigger game start
+            analogWrite(rgb_led1_red, 0);
+            analogWrite(rgb_led1_green, 0);
+            analogWrite(rgb_led1_blue, 0);
+            analogWrite(rgb_led2_red, 0);
+            analogWrite(rgb_led2_green, 0);
+            analogWrite(rgb_led2_blue, 0);
+            analogWrite(rgb_led3_red, 0);
+            analogWrite(rgb_led3_green, 0);
+            analogWrite(rgb_led3_blue, 0);
+        }
+        if (current_millis - previous_millis > 2500) {
+            analogWrite(rgb_led1_red, 255);
+
+            analogWrite(rgb_led2_red, 158);
+            analogWrite(rgb_led2_green, 208);
+            analogWrite(rgb_led2_blue, 10);
+
+            analogWrite(rgb_led3_green, 255);
+
+            digitalWrite(led4, HIGH);
+            digitalWrite(led5, HIGH);
+            digitalWrite(led6, HIGH);
+        }
+        if (current_millis - previous_millis > 2750) {
+            analogWrite(rgb_led1_red, 0);
+            analogWrite(rgb_led2_red, 0);
+            analogWrite(rgb_led2_green, 0);
+            analogWrite(rgb_led2_blue, 0);
+            analogWrite(rgb_led3_green, 0);
+            digitalWrite(led4, LOW);
+            digitalWrite(led5, LOW);
+            digitalWrite(led6, LOW);
+            game_in_progress = true;
+        }
+        // previous_millis = current_millis;
+        Serial.println(current_millis - previous_millis);
+    }
+    if (game_in_progress == false) {
+        return;
+    }
+    
+    // game start (mode cannot be changed now)
+    Serial.println("Game started!");
+    current_mode = 0;
 
 
+
+}
+
+void timed_game() {
 
 }
 
