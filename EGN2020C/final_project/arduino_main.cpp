@@ -31,7 +31,7 @@ int led5 = 35;
 int led6;
 
 // set display pins here
-
+// TODO: add display pins
 
 // set input variables
 bool option_button_pressed = false;
@@ -48,6 +48,7 @@ bool advanced_mode_active;
 int lifetime_nails_hit = 0;
 
 const int SHORT_PRESS_TIME = 500; // 500 milliseconds
+const int LONG_PRESS_TIME = 4000; // 4 seconds
 
 // set 
 
@@ -93,7 +94,7 @@ void loop() {
     //   Serial.println(button_status);
     // }
     
-    Serial.println(digitalRead(nail2));
+    // Serial.println(digitalRead(nail2));
     // Serial.println(digitalRead(nail2));
     // Serial.println(digitalRead(nail3));
     // Serial.println(digitalRead(option_button));
@@ -102,11 +103,6 @@ void loop() {
     // Serial.println(analogRead(screw2));
     // Serial.println('screw3:');
     // Serial.println(analogRead(screw3));
-    
-    option_button_current_state = digitalRead(option_button);
-    long pressed_time;
-    long released_time;
-    long press_duration;
 
 
     // temporary code to test button press
@@ -144,77 +140,85 @@ void loop() {
 
 
 
+    option_button_current_state = digitalRead(option_button);
+    long pressed_time;
+    long released_time;
+
     // handle option button press (short and long presses)
-    // if (option_button_last_state == HIGH && option_button_current_state == LOW) { // button was just pressed
-    //     pressed_time = millis();
-    // } else if (option_button_last_state == LOW && option_button_current_state == HIGH) { // button was just released
-    //     released_time = millis();
+    if (option_button_last_state == LOW && option_button_current_state == HIGH) { // button was just pressed
+        released_time = millis();
+        Serial.println("button pressed");
+        Serial.println(pressed_time);
+    } else if (option_button_last_state == HIGH && option_button_current_state == LOW) { // button was just released
+        pressed_time = millis();
 
-    //     press_duration = released_time - pressed_time;
+        long press_duration = pressed_time - released_time;
+        Serial.println("press_duration:");
+        Serial.println(press_duration);
         
-    //     if (press_duration < SHORT_PRESS_TIME) { // short press
-    //         // switch modes
-    //         if (!game_in_progress) {
-    //             if (current_mode == 2) {
-    //                 current_mode = 0;
-    //             } else {
-    //                 current_mode++;
-    //             }
-    //         } else {
-    //             // TODO: display error message 'can't change modes while game in progress!'
-    //         }
-    //     } else { // long press
-    //         // toggle advanced mode
-    //         advanced_mode_active = !advanced_mode_active;
-    //         // TODO: display message 'advanced mode on' or 'advanced mode off'
-    //     }
-    // }
+        if (press_duration < SHORT_PRESS_TIME) { // short press
+            // switch modes
+            if (!game_in_progress) {
+                if (current_mode == 2) {
+                    current_mode = 0;
+                } else {
+                    current_mode++;
+                }
+            } else {
+                // TODO: display error message 'can't change modes while game in progress!'
+            }
+        } else if (press_duration > LONG_PRESS_TIME) { // long press
+            // toggle advanced mode
+            advanced_mode_active = !advanced_mode_active;
+            Serial.println("Advanced mode changed!");
+            Serial.println(advanced_mode_active);
+            // TODO: display message 'advanced mode on' or 'advanced mode off'
+        }
+    }
+    option_button_last_state = option_button_current_state;
 
-    // // activate current mode
-    //     switch (current_mode) {
-    //         case 0:
-    //             // free play mode
-    //             free_play();
-    //             break;
-    //         case 1:
-    //             // pattern game mode
-    //             break;
-    //         case 2:
-    //             // timed game mode
-    //             break;
-    //     }
+    // activate current mode
+        switch (current_mode) {
+            case 0:
+                // free play mode
+                free_play();
+                break;
+            case 1:
+                // pattern game mode
+                break;
+            case 2:
+                // timed game mode
+                break;
+        }
 
 }
 
 int free_play() {
     game_in_progress = false;
-
-    // set values for rgb leds based on potentiometers values 
-    int potentiometer1_value = analogRead(screw1);
-    int rgb1_value = map(potentiometer1_value, 0, 1023, 0, 1535);
-    int arr[3];
-    rgb_value_separator(rgb1_value, arr);
-    
-    analogWrite(rgb_led1_red, arr[0]);
-    analogWrite(rgb_led1_green, arr[1]);
-    analogWrite(rgb_led1_blue, arr[2]);
      
-    
-    
     // turn on simple led when nail is hit
     if (digitalRead(nail1) == LOW) {
             digitalWrite(led4, HIGH);
+            lifetime_nails_hit++;
         } else {
             digitalWrite(led4, LOW);
         }
 
         if (digitalRead(nail2) == LOW) {
             digitalWrite(led5, HIGH);
+            lifetime_nails_hit++;
         } else {
             digitalWrite(led5, LOW);
         }
 
-    
+        if (digitalRead(nail3) == LOW) {
+            digitalWrite(led6, HIGH);
+            lifetime_nails_hit++;
+        } else {
+            digitalWrite(led6, LOW);
+        }
+
+    // change rgb led values based on potentiometer values
     int potentiometer2_value = analogRead(screw2);
     int rgb2_value = map(potentiometer2_value, 0, 1023, 0, 1535);
     int rgb2_arr[3];
