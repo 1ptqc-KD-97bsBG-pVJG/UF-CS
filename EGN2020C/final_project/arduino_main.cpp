@@ -39,6 +39,7 @@ bool option_button_is_long_detected = false;
 unsigned long option_button_pressed_time = 0;
 int option_button_last_state = LOW;
 int option_button_current_state;
+bool passed_startup = false;
 
 
 // set environment variables
@@ -145,61 +146,50 @@ void loop() {
     option_button_current_state = digitalRead(option_button);
 
     if (option_button_last_state == HIGH && option_button_current_state == LOW) {
+        // button is currently being pushed
         option_button_pressed_time = millis();
         option_button_is_pressing = true;
         option_button_is_long_detected = false;
-        Serial.println("button pressing");
     } else if (option_button_last_state == LOW && option_button_current_state == HIGH) {
+        // button was just released
         option_button_is_pressing = false;
-        if (option_button_is_long_detected == false) {
-            Serial.println("short press detected!");
+        if (option_button_is_long_detected == false && passed_startup == true) {
+            // button was just released and it was a short press
+            // switch modes
+            if (!game_in_progress) {
+                if (current_mode == 2) {
+                    current_mode = 0;
+                } else {
+                    current_mode++;
+                }
+                Serial.println("Mode changed!");
+                Serial.println(current_mode);
+            } else {
+                // TODO: display error message 'can't change modes while game in progress!'
+                Serial.println("Can't change modes while game in progress!");
+            }
         }
+        passed_startup = true;
     }
 
     if (option_button_is_pressing == true && option_button_is_long_detected == false) {
         long press_duration = millis() - option_button_pressed_time;
 
         if (press_duration > LONG_PRESS_TIME) {
+            // long press detected
             option_button_is_long_detected = true;
-            Serial.println("long press detected!");
+            // toggle advanced mode
+            advanced_mode_active = !advanced_mode_active;
+            if (advanced_mode_active == true) {
+                Serial.println("Advanced mode on!");
+            } else {
+                Serial.println("Advanced mode off!");
+            }
+            // TODO: display message 'advanced mode on' or 'advanced mode off'
         }
     }
 
     option_button_last_state = option_button_current_state;
-
-
-    // // handle option button press (short and long presses)
-    // if (option_button_last_state == LOW && option_button_current_state == HIGH) { // button was just pressed
-    //     released_time = millis();
-    //     Serial.println("button pressed");
-    //     Serial.println(pressed_time);
-    // } else if (option_button_last_state == HIGH && option_button_current_state == LOW) { // button was just released
-    //     pressed_time = millis();
-
-    //     long press_duration = pressed_time - released_time;
-    //     Serial.println("press_duration:");
-    //     Serial.println(press_duration);
-        
-    //     if (press_duration < SHORT_PRESS_TIME) { // short press
-    //         // switch modes
-    //         if (!game_in_progress) {
-    //             if (current_mode == 2) {
-    //                 current_mode = 0;
-    //             } else {
-    //                 current_mode++;
-    //             }
-    //         } else {
-    //             // TODO: display error message 'can't change modes while game in progress!'
-    //         }
-    //     } else if (press_duration > LONG_PRESS_TIME) { // long press
-    //         // toggle advanced mode
-    //         advanced_mode_active = !advanced_mode_active;
-    //         Serial.println("Advanced mode changed!");
-    //         Serial.println(advanced_mode_active);
-    //         // TODO: display message 'advanced mode on' or 'advanced mode off'
-    //     }
-    // }
-    // option_button_last_state = option_button_current_state;
 
     // activate current mode
         switch (current_mode) {
