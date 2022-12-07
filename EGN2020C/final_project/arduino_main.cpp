@@ -66,6 +66,8 @@ int lifetime_nails_hit = 0;
 long lifetime_screw_distance = 0;
 int lifetime_pattern_wins = 0;
 int lifetime_pattern_losses = 0;
+long best_time_easy = 9999;
+long best_time_advanced = 9999;
 
 const int SHORT_PRESS_TIME = 500; // 500 milliseconds
 const int LONG_PRESS_TIME = 3000; // 3 seconds
@@ -257,22 +259,23 @@ void pattern_game() {
     unsigned long previous_millis = millis();
     while (digitalRead(option_button) == HIGH && game_in_progress == false) {
         unsigned long current_millis = millis();
-        if (current_millis - previous_millis > 500) {
+        long duration = current_millis - previous_millis;
+        if (duration > 500 && duration < 1000) {
             analogWrite(rgb_led1_red, 255);
             analogWrite(rgb_led1_green, 0);
             analogWrite(rgb_led1_blue, 0);
         }
-        if (current_millis - previous_millis > 1000) {
+        if (duration > 1000 && duration < 1500) {
             analogWrite(rgb_led2_red, 158);
             analogWrite(rgb_led2_green, 208);
             analogWrite(rgb_led2_blue, 10);
         }
-        if (current_millis - previous_millis > 1500) {
+        if (duration > 1500 && duration < 2000) {
             analogWrite(rgb_led3_red, 0);
             analogWrite(rgb_led3_green, 255);
             analogWrite(rgb_led3_blue, 0);
         }
-        if (current_millis - previous_millis > 2000) {
+        if (duration > 2000 && duration < 2500) {
             // turn all off and trigger game start
             analogWrite(rgb_led1_red, 0);
             analogWrite(rgb_led1_green, 0);
@@ -284,14 +287,18 @@ void pattern_game() {
             analogWrite(rgb_led3_green, 0);
             analogWrite(rgb_led3_blue, 0);
         }
-        if (current_millis - previous_millis > 2500) {
+        if (duration > 2500 && duration < 2750) {
             analogWrite(rgb_led1_red, 255);
+            analogWrite(rgb_led1_green, 0);
+            analogWrite(rgb_led1_blue, 0);
 
             analogWrite(rgb_led2_red, 158);
             analogWrite(rgb_led2_green, 208);
             analogWrite(rgb_led2_blue, 10);
 
+            analogWrite(rgb_led3_red, 0);
             analogWrite(rgb_led3_green, 255);
+            analogWrite(rgb_led3_blue, 0);
 
             digitalWrite(led4, HIGH);
             digitalWrite(led5, HIGH);
@@ -299,10 +306,14 @@ void pattern_game() {
         }
         if (current_millis - previous_millis > 2750) {
             analogWrite(rgb_led1_red, 0);
+            analogWrite(rgb_led1_green, 0);
+            analogWrite(rgb_led1_blue, 0);
             analogWrite(rgb_led2_red, 0);
             analogWrite(rgb_led2_green, 0);
             analogWrite(rgb_led2_blue, 0);
+            analogWrite(rgb_led3_red, 0);
             analogWrite(rgb_led3_green, 0);
+            analogWrite(rgb_led3_blue, 0);
             digitalWrite(led4, LOW);
             digitalWrite(led5, LOW);
             digitalWrite(led6, LOW);
@@ -515,62 +526,352 @@ void pattern_game() {
         }
 
         delay(1000);
-        all_leds_off();
-        delay(1000);
-
-        // check if user_pattern is correct
         if (compare_arrays(user_pattern, pattern)) {
             // User wins
             Serial.println("User win");
             lifetime_pattern_wins++;
             // flash all lights green
-            analogWrite(rgb_led1_red, 0);
-            analogWrite(rgb_led1_green, 255);
-            analogWrite(rgb_led1_blue, 0);
-            analogWrite(rgb_led2_red, 0);
-            analogWrite(rgb_led2_green, 255);
-            analogWrite(rgb_led2_blue, 0);
-            analogWrite(rgb_led3_red, 0);
-            analogWrite(rgb_led3_green, 255);
-            analogWrite(rgb_led3_blue, 0);
-            digitalWrite(led4, HIGH);
-            digitalWrite(led5, HIGH);
-            digitalWrite(led6, HIGH);
-
+            flash_green();
         } else {
             // User loses
             Serial.println("User lose");
             lifetime_pattern_losses++;
             // flash rgb leds red
-            analogWrite(rgb_led1_red, 255);
-            analogWrite(rgb_led1_green, 0);
-            analogWrite(rgb_led1_blue, 0);
-            analogWrite(rgb_led2_red, 255);
-            analogWrite(rgb_led2_green, 0);
-            analogWrite(rgb_led2_blue, 0);
-            analogWrite(rgb_led3_red, 255);
-            analogWrite(rgb_led3_green, 0);
-            analogWrite(rgb_led3_blue, 0);
-            digitalWrite(led4, LOW);
-            digitalWrite(led5, LOW);
-            digitalWrite(led6, LOW);
+            delay(500);
+            flash_red();
         }
     
-    delay(500);
-    all_leds_off();
-    delay(1500);
+    // allow user to exit game while displaying results
+    previous_millis = millis();
+    game_in_progress = false;
+    bool sleeping = true;
+    while (sleeping) {
+        unsigned long current_millis = millis();
+        Serial.println(current_millis - previous_millis);
+        if (digitalRead(option_button) == LOW) {
+            return;
+        }
+        if (current_millis - previous_millis > 500) {
+            all_leds_off();
+        }
+        if (current_millis - previous_millis > 2000) {
+            sleeping = false;
+        }
+    }
+
 
     // FIXME: if 6 elements and user gets 3+ wrong that includes screw, it says user losses early
-    // TODO: add color specifier to advanced mode
+    // TODO: add color specifier to advanced mode (probably not worth it, put it in timed)
 }
 
 
 
 
 void timed_game() {
+    // randomly select 3 elements, user has to repeat them but order does not matter.
+    // Timer tracks how long it takes, rgb lights flash to indicate time range at the end.
 
+    // count down to game start while allowing mode change
+    unsigned long previous_millis = millis();
+    while (digitalRead(option_button) == HIGH && game_in_progress == false) {
+        unsigned long current_millis = millis();
+        long duration = current_millis - previous_millis;
+        if (duration > 500 && duration < 1000) {
+            analogWrite(rgb_led1_red, 255);
+            analogWrite(rgb_led1_green, 0);
+            analogWrite(rgb_led1_blue, 0);
+        }
+        if (duration > 1000 && duration < 1500) {
+            analogWrite(rgb_led2_red, 158);
+            analogWrite(rgb_led2_green, 208);
+            analogWrite(rgb_led2_blue, 10);
+        }
+        if (duration > 1500 && duration < 2000) {
+            analogWrite(rgb_led3_red, 0);
+            analogWrite(rgb_led3_green, 255);
+            analogWrite(rgb_led3_blue, 0);
+        }
+        if (duration > 2000 && duration < 2500) {
+            // turn all off and trigger game start
+            analogWrite(rgb_led1_red, 0);
+            analogWrite(rgb_led1_green, 0);
+            analogWrite(rgb_led1_blue, 0);
+            analogWrite(rgb_led2_red, 0);
+            analogWrite(rgb_led2_green, 0);
+            analogWrite(rgb_led2_blue, 0);
+            analogWrite(rgb_led3_red, 0);
+            analogWrite(rgb_led3_green, 0);
+            analogWrite(rgb_led3_blue, 0);
+        }
+        if (duration > 2500 && duration < 2750) {
+            analogWrite(rgb_led1_red, 255);
+            analogWrite(rgb_led1_green, 0);
+            analogWrite(rgb_led1_blue, 0);
+
+            analogWrite(rgb_led2_red, 158);
+            analogWrite(rgb_led2_green, 208);
+            analogWrite(rgb_led2_blue, 10);
+
+            analogWrite(rgb_led3_red, 0);
+            analogWrite(rgb_led3_green, 255);
+            analogWrite(rgb_led3_blue, 0);
+
+            digitalWrite(led4, HIGH);
+            digitalWrite(led5, HIGH);
+            digitalWrite(led6, HIGH);
+        }
+        if (current_millis - previous_millis > 2750) {
+            analogWrite(rgb_led1_red, 0);
+            analogWrite(rgb_led1_green, 0);
+            analogWrite(rgb_led1_blue, 0);
+            analogWrite(rgb_led2_red, 0);
+            analogWrite(rgb_led2_green, 0);
+            analogWrite(rgb_led2_blue, 0);
+            analogWrite(rgb_led3_red, 0);
+            analogWrite(rgb_led3_green, 0);
+            analogWrite(rgb_led3_blue, 0);
+            digitalWrite(led4, LOW);
+            digitalWrite(led5, LOW);
+            digitalWrite(led6, LOW);
+            game_in_progress = true;
+        }
+    }
+    // catch if user presses button to exit game
+    if (game_in_progress == false) {
+        return;
+    }
+    
+    // game start (mode cannot be changed now)
+    
+    // generate pattern (order does not matter in this mode)
+    int i;
+    int pattern[6];
+    for (i = 0; i < 6; i++) {
+        pattern[i] = i;
+    }
+
+    // randomize pattern
+    const int pattern_size = sizeof(pattern) / sizeof(pattern[0]);
+    for (i = 0; i < pattern_size; i++) {
+        int random_index = rand() % pattern_size;
+        int temp = pattern[random_index];
+        pattern[random_index] = pattern[i];
+        pattern[i] = temp;
+    }
+
+    // mark last 3 elements as invalid if not in advanced mode
+    // advanced mode = 6 element long pattern, normal mode = 3 element long pattern
+    int pattern_length = 6;
+    if (!advanced_mode_active) {
+        pattern[3] = 9;
+        pattern[4] = 9;
+        pattern[5] = 9;
+        pattern_length = 3;
+    }
+
+    // initialize random rgb values
+        // generate random screw positions
+        int random_screw1_position = rand() % 256;
+        int random_screw2_position = rand() % 256;
+        int random_screw3_position = rand() % 256;
+
+        // convert random screw positions to rgb values
+        int rgb1_value = map(random_screw1_position, 0, 1023, 0, 1535);
+        int rgb1_arr[3];
+        rgb_value_separator(rgb1_value, rgb1_arr);
+        
+        int rgb2_value = map(random_screw2_position, 0, 1023, 0, 1535);
+        int rgb2_arr[3];
+        rgb_value_separator(rgb2_value, rgb2_arr);
+
+        int rgb3_value = map(random_screw3_position, 0, 1023, 0, 1535);
+        int rgb3_arr[3];
+        rgb_value_separator(rgb3_value, rgb3_arr);
+        
+        // set rgb values
+        int random_rgb1_red = rgb1_arr[0];
+        int random_rgb1_green = rgb1_arr[1];
+        int random_rgb1_blue = rgb1_arr[2];
+        int random_rgb2_red = rgb2_arr[0];
+        int random_rgb2_green = rgb2_arr[1];
+        int random_rgb2_blue = rgb2_arr[2];
+        int random_rgb3_red = rgb3_arr[0];
+        int random_rgb3_green = rgb3_arr[1];
+        int random_rgb3_blue = rgb3_arr[2];
+
+
+    // display pattern (all at once)
+    if (find(pattern, 0)) {
+        analogWrite(rgb_led1_red, random_rgb1_red);
+        analogWrite(rgb_led1_green, random_rgb1_green);
+        analogWrite(rgb_led1_blue, random_rgb1_blue);
+    }
+    if (find(pattern, 1)) {
+        analogWrite(rgb_led2_red, random_rgb2_red);
+        analogWrite(rgb_led2_green, random_rgb2_green);
+        analogWrite(rgb_led2_blue, random_rgb2_blue);
+    }
+    if (find(pattern, 2)) {
+        analogWrite(rgb_led3_red, random_rgb3_red);
+        analogWrite(rgb_led3_green, random_rgb3_green);
+        analogWrite(rgb_led3_blue, random_rgb3_blue);
+    }
+    if (find(pattern, 3)) {
+        digitalWrite(led4, HIGH);
+    }
+    if (find(pattern, 4)) {
+        digitalWrite(led5, HIGH);
+    }
+    if (find(pattern, 5)) {
+        digitalWrite(led6, HIGH);
+    }
+
+    // user input starts
+    long timer_start = millis();
+    bool success = true;
+    int user_pattern[6] = {0, 0, 0, 0, 0, 0};
+    int screw1_start_position = analogRead(screw1);
+    int screw2_start_position = analogRead(screw2);
+    int screw3_start_position = analogRead(screw3);
+    while (success && sum_array(user_pattern) < pattern_length) {
+        // nails
+        nail1_current_state = digitalRead(nail1);
+        if (nail1_last_state == HIGH && nail1_current_state == LOW) {
+            // nail was just hit
+            lifetime_nails_hit++;
+            if (find(pattern, 3)) {
+                // nail was supposed to be hit
+                user_pattern[3] = 1;
+                digitalWrite(nail1, LOW);
+            } else {
+                // nail was not supposed to be hit
+                success = false;
+                flash_red();
+                Serial.println("Wrong nail hit!");
+            }
+        }
+        nail1_last_state = nail1_current_state;
+
+        nail2_current_state = digitalRead(nail2);
+        if (nail2_last_state == HIGH && nail2_current_state == LOW) {
+            // nail was just hit
+            lifetime_nails_hit++;
+            if (find(pattern, 4)) {
+                // nail was supposed to be hit
+                user_pattern[4] = 1;
+                digitalWrite(nail2, LOW);
+            } else {
+                // nail was not supposed to be hit
+                success = false;
+                flash_red();
+                Serial.println("Wrong nail hit!");
+            }
+        }
+        nail2_last_state = nail2_current_state;
+
+        nail3_current_state = digitalRead(nail3);
+        if (nail3_last_state == HIGH && nail3_current_state == LOW) {
+            // nail was just hit
+            lifetime_nails_hit++;
+            if (find(pattern, 5)) {
+                // nail was supposed to be hit
+                user_pattern[5] = 1;
+                digitalWrite(nail3, LOW);
+            } else {
+                // nail was not supposed to be hit
+                success = false;
+                flash_red();
+                Serial.println("Wrong nail hit!");
+            }
+        }
+        nail3_last_state = nail3_current_state;
+
+        // screws
+        int screw1_current_position = analogRead(screw1);
+
+        if (!check_range(screw1_current_position, screw1_start_position, 50)) {
+            // Screw was moved
+            if (find(pattern, 0)) {
+                // screw was supposed to be moved
+                screw1_start_position = 9999;
+                if (check_range(screw1_current_position, random_screw1_position, 10)) {
+                    // screw was moved to the right position
+                    user_pattern[0] = 1;
+                    lifetime_screw_distance += abs(screw1_current_position - screw1_start_position);
+
+                }
+                
+                // TODO: display screw position on LED when moving, target color when not
+                
+                user_pattern[0] = 1;
+
+                lifetime_screw_distance += abs(screw1_current_position - screw1_start_position);
+                screw1_start_position = screw1_current_position;
+            } else {
+                // screw was not supposed to be moved
+                success = false;
+                flash_red();
+                lifetime_screw_distance += abs(screw1_current_position - screw1_start_position);
+                Serial.println("Wrong screw moved!");
+
+            }
+            
+            
+            
+            if (find(user_pattern, 0) == false) {
+                // screw was just moved and move was valid
+                user_pattern[current_index] = 0;
+                current_index++;
+                lifetime_screw_distance += abs(screw1_current_position - screw1_start_position);
+                // set start position to an unreachable value so LED doesn't turn off
+            }
+            // change rgb led values based on potentiometer values
+            int rgb1_value = map(screw1_current_position, 0, 1023, 0, 1535);
+            int rgb1_arr[3];
+            rgb_value_separator(rgb1_value, rgb1_arr);
+
+            analogWrite(rgb_led1_red, rgb1_arr[0]);
+            analogWrite(rgb_led1_green, rgb1_arr[1]);
+            analogWrite(rgb_led1_blue, rgb1_arr[2]);
+        }
+
+    }
+
+    // determine if user won
+    if (success) {
+        long timer_end = millis();
+        long timer_duration = timer_end - timer_start;
+        Serial.print("Time: ");
+        Serial.println(timer_duration);
+        if (advanced_mode_active) {
+            if (timer_duration < best_time_advanced) {
+                best_time_advanced = timer_duration;
+                Serial.println("New best time! (advanced)");
+                // TODO: "snake" light animation (then flash)
+            }
+        } else {
+            if (timer_duration < best_time_easy) {
+                best_time_easy = timer_duration;
+                Serial.println("New best time! (easy)");
+            }
+        }
+    }
 }
 
+
+
+
+
+
+// helper functions
+
+int sum_array(int arr[]) {
+    int sum = 0;
+    for (int i = 0; i < sizeof(arr); i++) {
+        sum += arr[i];
+    }
+    return sum;
+}
 
 bool compare_arrays(int arr1[], int arr2[]) {
     for (int i = 0; i < 6; i++) {
@@ -745,4 +1046,44 @@ void all_leds_off() {
         digitalWrite(led4, LOW);
         digitalWrite(led5, LOW);
         digitalWrite(led6, LOW);
+}
+
+void flash_red() {
+    all_leds_off();
+    delay(500);
+    // flash rgb leds red
+    analogWrite(rgb_led1_red, 255);
+    analogWrite(rgb_led1_green, 0);
+    analogWrite(rgb_led1_blue, 0);
+    analogWrite(rgb_led2_red, 255);
+    analogWrite(rgb_led2_green, 0);
+    analogWrite(rgb_led2_blue, 0);
+    analogWrite(rgb_led3_red, 255);
+    analogWrite(rgb_led3_green, 0);
+    analogWrite(rgb_led3_blue, 0);
+    digitalWrite(led4, LOW);
+    digitalWrite(led5, LOW);
+    digitalWrite(led6, LOW);
+    delay(500);
+    all_leds_off();
+}
+
+void flash_green() {
+    all_leds_off();
+    delay(1000);
+    // flash rgb leds green
+    analogWrite(rgb_led1_red, 0);
+    analogWrite(rgb_led1_green, 255);
+    analogWrite(rgb_led1_blue, 0);
+    analogWrite(rgb_led2_red, 0);
+    analogWrite(rgb_led2_green, 255);
+    analogWrite(rgb_led2_blue, 0);
+    analogWrite(rgb_led3_red, 0);
+    analogWrite(rgb_led3_green, 255);
+    analogWrite(rgb_led3_blue, 0);
+    digitalWrite(led4, LOW);
+    digitalWrite(led5, LOW);
+    digitalWrite(led6, LOW);
+    delay(500);
+    all_leds_off();
 }
