@@ -809,8 +809,8 @@ void timed_game() {
             
             if (find(user_pattern, 0) == false) {
                 // screw was just moved and move was valid
-                user_pattern[current_index] = 0;
-                current_index++;
+                // user_pattern[current_index] = 0;
+                // current_index++;
                 lifetime_screw_distance += abs(screw1_current_position - screw1_start_position);
                 // set start position to an unreachable value so LED doesn't turn off
             }
