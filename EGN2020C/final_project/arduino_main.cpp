@@ -777,7 +777,7 @@ void timed_game() {
         // screws
         int screw1_current_position = analogRead(screw1);
 
-        // code not complete
+        // FIXME: code not complete
         if (!check_range(screw1_current_position, screw1_start_position, 50)) {
             // Screw was moved
             if (find(pattern, 0)) {
