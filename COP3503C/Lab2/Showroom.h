@@ -1,4 +1,6 @@
-#include "Showroom.h"
+#ifndef SHOWROOM_H
+#define SHOWROOM_H
+#include "Vehicle.h"
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -16,3 +18,4 @@ class Showroom {
         unsigned  int  capacity;
         std::vector<Vehicle>  vehicleList;
 };
+#endif

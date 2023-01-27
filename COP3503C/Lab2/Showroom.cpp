@@ -22,8 +22,13 @@ void Showroom::AddVehicle(Vehicle v) {
 }
 
 void Showroom::ShowInventory() {
-    for (unsigned int i = 0; i < vehicleList.size(); i++) {
-        vehicleList[i].Display();
+    if (vehicleList.size() == 0) {
+        cout << "Unnamed Showroom is empty!" << endl;
+    } else {
+        cout << "Vehicles in " << this->name << endl;
+        for (unsigned int i = 0; i < vehicleList.size(); i++) {
+            vehicleList[i].Display();
+        }
     }
 }
 

@@ -1,3 +1,5 @@
+#ifndef VEHICLE_H
+#define VEHICLE_H
 #include <string>
 class Vehicle {
     public:
@@ -14,3 +16,4 @@ class Vehicle {
         float price;
         unsigned int miles;
 };
+#endif
