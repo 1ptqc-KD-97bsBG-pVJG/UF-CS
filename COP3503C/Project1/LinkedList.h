@@ -47,12 +47,23 @@ class LinkedList {
     }
 
     // AddHead
-    AddHead() {
-
+    void AddHead(int data) {
+      Node* newNode = new Node(data);
+      newNode -> next = head;
+      head = newNode;
+      nodeCount++;
     }
 
     // AddTail
-    AddTail() {
-
+    void AddTail(int data) {
+      Node* newNode = new Node(data);
+      // check if list is empty
+      if (tail == nullptr) {
+        head = tail = newNode;
+      } else {
+        tail -> next = newNode;
+        tail = newNode;
+      }
+      nodeCount++;
     }
 };
