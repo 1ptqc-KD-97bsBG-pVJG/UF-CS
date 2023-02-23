@@ -50,20 +50,20 @@ class LinkedList {
       nodeCount = 0;
     };
 
-    // Create a new Node at the front of the list to store the passed in parameter.
     void AddHead(const T& data) {
-      Node *newNode = new Node(data);
-      newNode->next = newNode->prev = nullptr;
-      // check if list is empty
-      if (head == nullptr) {
-        head = tail = newNode;
-      } else {
-        newNode->next = head;
-        newNode->prev = newNode;
-        head = newNode;
-      }
-      nodeCount++;   
+        Node *newNode = new Node(data);
+        newNode->next = newNode->prev = nullptr;
+        // check if list is empty
+        if (head == nullptr) {
+            head = tail = newNode;
+        } else {
+            newNode->next = head;
+            head->prev = newNode;
+            head = newNode;
+        }
+        nodeCount++;   
     };
+
 
     // Create a new Node at the end of the list to store the passed in parameter.
     void AddTail(const T& data) {
@@ -82,8 +82,11 @@ class LinkedList {
 
     // Given an array of values, insert a node for each of those at the beginning list, maintaining the original order. 
     void AddNodesHead(const T* data, unsigned int count) {
-      for (unsigned int i = 0; i < count; i++) {
+      for (unsigned int i = count - 1; i > 0; i--) {
         AddHead(data[i]);
+      }
+      if (count > 0) {
+          AddHead(data[0]);
       }
     };
 
