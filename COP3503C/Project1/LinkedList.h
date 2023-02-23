@@ -15,10 +15,7 @@ class LinkedList {
         Node *next;
         Node *prev;
         // not sure about this line
-        Node(int data = 0, Node* next = nullptr) {
-            this->data = data;
-            this->next = next;
-        }
+       Node(const T& d = T{}, Node* n = nullptr, Node* p = nullptr) : data{ d }, next{ n }, prev{ p } {}
     };
   Node *head;
   Node *tail;
@@ -45,9 +42,9 @@ class LinkedList {
     ~LinkedList() {
       Node *temp = head;
       while (temp != nullptr) {
-        Node* next = temp -> next;
-        delete temp;
-        temp = next;
+        Node *temp2 = temp;
+        temp = temp->next;
+        delete temp2;
       }
       head = tail = nullptr;
       nodeCount = 0;
@@ -84,15 +81,15 @@ class LinkedList {
     };
 
     // Given an array of values, insert a node for each of those at the beginning list, maintaining the original order. 
-    void AddNodesHead(const T& data, unsigned int count) {
-      for (unsigned int i = count - 1; i >= 0; i--) {
+    void AddNodesHead(const T* data, unsigned int count) {
+      for (unsigned int i = 0; i < count; i++) {
         AddHead(data[i]);
       }
     };
 
     // Ditto, except adding to the end of the list.
-    void AddNodesTail(const T& data, unsigned int count) {
-      for (int i = 0; i < count; i++) {
+    void AddNodesTail(const T* data, unsigned int count) {
+      for (unsigned int i = 0; i < count; i++) {
         AddTail(data[i]);
       }
     };
@@ -106,7 +103,7 @@ class LinkedList {
     void PrintForward() const {
       Node *temp = head;
       while (temp != nullptr) {
-        std::cout << temp -> data << std::endl;
+        cout << temp->data << endl;
         temp = temp->next;
       }
     };
@@ -115,7 +112,7 @@ class LinkedList {
     void PrintReverse() const {
       Node *temp = tail;
       while (temp != nullptr) {
-        std::cout << temp->data << std::endl;
+        cout << temp->data << endl;
         temp = temp->prev;
       }
     };
