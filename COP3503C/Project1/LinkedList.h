@@ -119,5 +119,93 @@ class LinkedList {
         temp = temp->prev;
       }
     };
+
+// Instructions
+  // In this part you will implement various functions to access parts of the container:
+
+  // Getting the head and tail nodes:
+
+  // Head()
+  // Tail()
+  // Getting a specific node based on an index--allowing this container to be used as though it were an array**
+
+  // GetNode()
+  // operator[]()
+  // Finding the FIRST node based on a value
+
+  // Find()
+  // Finding ALL nodes based on a value
+
+  // FindAll
+  // You will also implement the other two members of the Big Three
+
+  // The copy constructor
+  // The copy assignment operator
+
+// accessors
+  Node* Head() {
+    return head;
+  };
+
+  const Node* Head() const {
+    return head;
+  };
+
+  Node* Tail() {
+    return tail;
+  };
+
+  const Node* Tail() const {
+    return tail;
+  };
+
+  // Given an index, return a pointer to the node at that index. Throws an exception of type out_of_range if the index is out of range. Const and non-const versions. 
+  Node* GetNode(unsigned int index) {
+    if (index >= nodeCount) {
+      throw out_of_range("");
+    }
+    Node *temp = head;
+    for (unsigned int i = 0; i < index; i++) {
+      temp = temp->next;
+    }
+    return temp;
+  };
+
+  const Node* GetNode(unsigned int index) const{
+    if (index >= nodeCount) {
+      throw out_of_range("");
+    }
+    Node *temp = head;
+    for (unsigned int i = 0; i < index; i++) {
+      temp = temp->next;
+    }
+    return temp;
+  };
+
+  // Find the first node with a data value matching the passed in parameter, returning a pointer to that node. Returns nullptr if no matching node found.  
+  Node* Find(const T& data) {
+    Node *temp = head;
+    while (temp != nullptr) {
+      if (temp->data == data) {
+        return temp;
+      }
+      temp = temp->next;
+    }
+    return nullptr;
+  };
+
+// Operators
+  // Overloaded subscript operator. Takes an index, and returns data from the index-th node. Throws an out_of_range exception for an invalid index. Const and non-const versions. 
+  const T& operator[](unsigned int index) const {
+    if (index >= nodeCount) {
+      throw out_of_range("");
+    }
+    Node *temp = head;
+    for (unsigned int i = 0; i < index; i++) {
+      temp = temp->next;
+    }
+    return temp->data;
+  };
+
 };
 #endif
