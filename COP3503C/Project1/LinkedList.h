@@ -183,7 +183,7 @@ class LinkedList {
   };
 
   // Find the first node with a data value matching the passed in parameter, returning a pointer to that node. Returns nullptr if no matching node found.  
-  Node* Find(const T& data) {
+  Node* Find(const T& data) const {
     Node *temp = head;
     while (temp != nullptr) {
       if (temp->data == data) {
@@ -194,9 +194,21 @@ class LinkedList {
     return nullptr;
   };
 
+  // Find all nodes which match the passed in parameter value, and store a pointer to that node in the passed in vector. Use of a parameter like this (passing a something in by reference, and storing data for later use) is called an output parameter. 
+  void FindAll(vector<Node*>& outData, const T& value) const {
+    Node *temp = head;
+    while (temp != nullptr) {
+      if (temp->data == value) {
+        outData.push_back(temp);
+      }
+      temp = temp->next;
+    }
+  };
+
 // Operators
   // Overloaded subscript operator. Takes an index, and returns data from the index-th node. Throws an out_of_range exception for an invalid index. Const and non-const versions. 
-  const T& operator[](unsigned int index) const {
+  const T& operator[](unsigned int index) const;
+  T& operator[](unsigned int index) {
     if (index >= nodeCount) {
       throw out_of_range("");
     }
@@ -205,6 +217,28 @@ class LinkedList {
       temp = temp->next;
     }
     return temp->data;
+  };
+
+  // Assignment operator. After listA = listB, listA == listB is true. Can of your existing functions to make write this one? (Hint: Yes you you utilize any can.) 
+  bool operator==(const LinkedList<T>& rhs) const;
+  LinkedList<T>& operator=(const LinkedList<T>& rhs) {
+    if (this == &rhs) {
+      return *this;
+    }
+    Node *temp = head;
+    while (temp != nullptr) {
+      Node *temp2 = temp;
+      temp = temp->next;
+      delete temp2;
+    }
+    head = tail = nullptr;
+    nodeCount = 0;
+    temp = rhs.head;
+    while (temp != nullptr) {
+      AddTail(temp->data);
+      temp = temp->next;
+    }
+    return *this;
   };
 
 };
