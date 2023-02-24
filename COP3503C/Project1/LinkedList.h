@@ -4,7 +4,6 @@
 #include <vector>
 using namespace std;
 
-
 template <typename T>
 class LinkedList {
 
@@ -21,37 +20,29 @@ class LinkedList {
   Node *tail;
   unsigned int nodeCount;
 
+  // Default constructor. How many nodes in an empty list? (Answer: 0) What is head pointing to? What is tail pointing to? (Answer: nullptr) Initialize your variables! 
+  LinkedList() {
+  head = tail = nullptr;
+  nodeCount = 0;
+  };
 
-    // Default constructor. How many nodes in an empty list? (Answer: 0) What is head pointing to? What is tail pointing to? (Answer: nullptr) Initialize your variables! 
-    LinkedList() {
+  // Sets “this” to a copy of the passed in LinkedList. For example, if the other list has 10 nodes, with values of 1-10? “this” should have a copy of that same data. 
+  LinkedList(const LinkedList<T>& list) {
     head = tail = nullptr;
     nodeCount = 0;
-    };
+    Node* temp = list.head;
+    while (temp != nullptr) {
+      AddTail(temp->data);
+      temp = temp->next;
+    }
+  };
 
-    LinkedList(const LinkedList<T>& list) {
-      head = tail = nullptr;
-      nodeCount = 0;
-      Node* temp = list.head;
-      while (temp != nullptr) {
-        AddTail(temp->data);
-        temp = temp->next;
-      }
-    };
-
-    // The usual. Clean up your mess. (Delete all the nodes created by the list.)
-    ~LinkedList() {
-      Node *temp = head;
-      while (temp != nullptr) {
-        Node *temp2 = temp;
-        temp = temp->next;
-        delete temp2;
-      }
-      head = tail = nullptr;
-      nodeCount = 0;
-    };
+  // The usual. Clean up your mess. (Delete all the nodes created by the list.)
+  ~LinkedList() {
+    Clear();
+  };
 
 // Insertion
-
   void AddHead(const T& data) {
       Node *newNode = new Node(data);
       newNode->next = newNode->prev = nullptr;
@@ -66,11 +57,10 @@ class LinkedList {
       nodeCount++;   
   };
 
-
   // Create a new Node at the end of the list to store the passed in parameter.
   void AddTail(const T& data) {
     Node *newNode = new Node(data);
-    newNode->next = newNode->prev = nullptr;
+    newNode->next = nullptr;
     // check if list is empty
     if (head == nullptr) {
       head = tail = newNode;
@@ -80,7 +70,7 @@ class LinkedList {
       tail = newNode;
     }
     nodeCount++;
-  };
+};
 
   // Given an array of values, insert a node for each of those at the beginning list, maintaining the original order. 
   void AddNodesHead(const T* data, unsigned int count) {
@@ -149,36 +139,155 @@ class LinkedList {
     }
   };
 
+// Removal
+  // Deletes the first Node in the list. Returns whether or not the Node was removed.
+  bool RemoveHead() {
+    if (head == nullptr) {
+      return false;
+    } else if (head == tail) {
+      delete head;
+      head = tail = nullptr;
+      nodeCount--;
+      return true;
+    } else {
+      Node *temp = head;
+      head = head->next;
+      head->prev = nullptr;
+      delete temp;
+      nodeCount--;
+      return true;
+    }
+  };
+  
+  // Deletes the last Node, returning whether or not the operation was successful. 
+  bool RemoveTail() {
+    if (head == nullptr) {
+      return false;
+    } else if (head == tail) {
+      delete head;
+      head = tail = nullptr;
+      nodeCount--;
+      return true;
+    } else {
+      Node *temp = tail;
+      tail = tail->prev;
+      tail->next = nullptr;
+      delete temp;
+      nodeCount--;
+      return true;
+    }
+  };
 
+  // Remove ALL Nodes containing values matching that of the passed-in. Returns how many instances were removed. 
+  unsigned int Remove(const T& value) {
+    int count = 0;
+    Node* temp2 = head;
+    while (temp2 != nullptr) {
+      if (temp2->data == value) {
+        if (temp2 == head) {
+          RemoveHead();
+          temp2 = head;
+        }
+        else if (temp2 == tail) {
+          RemoveTail();
+          temp2 = nullptr;
+        }
+        else {
+          Node* temp = temp2;
+          temp2 = temp2->next;
+          temp->prev->next = temp2;
+          temp2->prev = temp->prev;
+          delete temp;
+          nodeCount--;
+        }
+        count++;
+      }
+      else {
+        temp2 = temp2->next;
+      }
+   }
+    return count;
+  };
 
-// Deletion
+  // Deletes the index-th Node from the list, returning whether or not the operation was successful.
+  bool RemoveAt(unsigned int index) {
+    if (index >= nodeCount) {
+      return false;
+    }
+    if (index == 0) {
+      RemoveHead();
+    } else if (index == nodeCount - 1) {
+      RemoveTail();
+    } else {
+      Node *temp = head;
+      for (unsigned int i = 0; i < index; i++) {
+        temp = temp->next;
+      }
+      temp->prev->next = temp->next;
+      temp->next->prev = temp->prev;
+      delete temp;
+      nodeCount--;
+    }
+    return true;
+  };
 
-
+  // Deletes all Nodes. Don’t forget the node count how many nodes do you have after you deleted all of them?
+  void Clear() {
+    Node *temp = head;
+    while (temp != nullptr) {
+      Node *temp2 = temp;
+      temp = temp->next;
+      delete temp2;
+    }
+    head = tail = nullptr;
+    nodeCount = 0;
+  }
 
     // How many things are stored in this list? 
     unsigned int NodeCount() const {
       return nodeCount;
     };
 
-    // Iterator through all of the nodes and print out their values, one a time. 
-    void PrintForward() const {
-      Node *temp = head;
-      while (temp != nullptr) {
-        cout << temp->data << endl;
-        temp = temp->next;
-      }
-    };
+// Behaviors
 
-    // Print out the values in reverse order.
-    void PrintReverse() const {
-      Node *temp = tail;
-      while (temp != nullptr) {
-        cout << temp->data << endl;
-        temp = temp->prev;
-      }
-    };
+  // Iterator through all of the nodes and print out their values, one a time. 
+  void PrintForward() const {
+    Node *temp = head;
+    while (temp != nullptr) {
+      cout << temp->data << endl;
+      temp = temp->next;
+    }
+  };
 
-// accessors
+  // Print out the values in reverse order.
+  void PrintReverse() const {
+    Node *temp = tail;
+    while (temp != nullptr) {
+      cout << temp->data << endl;
+      temp = temp->prev;
+    }
+  };
+
+  // This function takes in a pointer to a Node—a starting node. From that node, recursively visit each node that follows, in forward order, and print their values. This function MUST be implemented using recursion, or tests using it will be worth no points. Check your textbook for a reference on recursion. 
+  void PrintForwardRecursive(Node* node) const {
+    if (node == nullptr) {
+      return;
+    }
+    cout << node->data << endl;
+    PrintForwardRecursive(node->next);
+  };
+
+  // Same deal as PrintForwardRecursive, but in reverse.
+  void PrintReverseRecursive(Node* node) const {
+    if (node == nullptr) {
+      return;
+    }
+    cout << node->data << endl;
+    PrintReverseRecursive(node->prev);
+  };
+
+
+// Accessors
   Node* Head() {
     return head;
   };
@@ -240,7 +349,6 @@ class LinkedList {
       temp = temp->next;
     }
   };
-
 
 // Operators
   // Overloaded subscript operator. Takes an index, and returns data from the index-th node. Throws an out_of_range exception for an invalid index. Const and non-const versions. 
