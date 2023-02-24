@@ -19,7 +19,7 @@ class LinkedList {
     };
   Node *head;
   Node *tail;
-  int nodeCount;
+  unsigned int nodeCount;
 
 
     // Default constructor. How many nodes in an empty list? (Answer: 0) What is head pointing to? What is tail pointing to? (Answer: nullptr) Initialize your variables! 
@@ -50,52 +50,110 @@ class LinkedList {
       nodeCount = 0;
     };
 
-    void AddHead(const T& data) {
-        Node *newNode = new Node(data);
-        newNode->next = newNode->prev = nullptr;
-        // check if list is empty
-        if (head == nullptr) {
-            head = tail = newNode;
-        } else {
-            newNode->next = head;
-            head->prev = newNode;
-            head = newNode;
-        }
-        nodeCount++;   
-    };
+// Insertion
 
-
-    // Create a new Node at the end of the list to store the passed in parameter.
-    void AddTail(const T& data) {
+  void AddHead(const T& data) {
       Node *newNode = new Node(data);
       newNode->next = newNode->prev = nullptr;
       // check if list is empty
       if (head == nullptr) {
-        head = tail = newNode;
+          head = tail = newNode;
       } else {
-        newNode->prev = tail;
-        tail->next = newNode;
-        tail = newNode;
+          newNode->next = head;
+          head->prev = newNode;
+          head = newNode;
       }
+      nodeCount++;   
+  };
+
+
+  // Create a new Node at the end of the list to store the passed in parameter.
+  void AddTail(const T& data) {
+    Node *newNode = new Node(data);
+    newNode->next = newNode->prev = nullptr;
+    // check if list is empty
+    if (head == nullptr) {
+      head = tail = newNode;
+    } else {
+      newNode->prev = tail;
+      tail->next = newNode;
+      tail = newNode;
+    }
+    nodeCount++;
+  };
+
+  // Given an array of values, insert a node for each of those at the beginning list, maintaining the original order. 
+  void AddNodesHead(const T* data, unsigned int count) {
+    for (unsigned int i = count - 1; i > 0; i--) {
+      AddHead(data[i]);
+    }
+    if (count > 0) {
+        AddHead(data[0]);
+    }
+  };
+
+  // Ditto, except adding to the end of the list.
+  void AddNodesTail(const T* data, unsigned int count) {
+    for (unsigned int i = 0; i < count; i++) {
+      AddTail(data[i]);
+    }
+  };
+
+  // Given a pointer to a node, create a new node to store the passed in value, after the indicated node.
+  void InsertAfter(Node* node, const T& data) {
+    if (node == nullptr) {
+      AddHead(data);
+    } else if (node == tail) {
+      AddTail(data);
+    } else {
+      Node *newNode = new Node(data);
+      newNode->next = node->next;
+      newNode->prev = node;
+      node->next->prev = newNode;
+      node->next = newNode;
       nodeCount++;
-    };
+    }
+  };
 
-    // Given an array of values, insert a node for each of those at the beginning list, maintaining the original order. 
-    void AddNodesHead(const T* data, unsigned int count) {
-      for (unsigned int i = count - 1; i > 0; i--) {
-        AddHead(data[i]);
-      }
-      if (count > 0) {
-          AddHead(data[0]);
-      }
-    };
+  // Ditto, except insert the new node before the indicated node.
+  void InsertBefore(Node* node, const T& data) {
+    if (node == nullptr) {
+      AddTail(data);
+    } else if (node == head) {
+      AddHead(data);
+    } else {
+      Node *newNode = new Node(data);
+      newNode->next = node;
+      newNode->prev = node->prev;
+      node->prev->next = newNode;
+      node->prev = newNode;
+      nodeCount++;
+    }
+  };
 
-    // Ditto, except adding to the end of the list.
-    void AddNodesTail(const T* data, unsigned int count) {
-      for (unsigned int i = 0; i < count; i++) {
-        AddTail(data[i]);
+  // Inserts a new Node to store the first parameter, at the index-th location. So if you specified 3 as the index, the new Node should have 3 Nodes before it. Throws an out_of_range exception if given an invalid index. 
+  void InsertAt(const T& data, unsigned int index) {
+    if (index > nodeCount) {
+      throw out_of_range("");
+    }
+    if (index == 0) {
+      AddHead(data);
+    } else if (index == nodeCount) {
+      AddTail(data);
+    } else {
+      Node *temp = head;
+      for (unsigned int i = 0; i < index; i++) {
+        temp = temp->next;
       }
-    };
+      InsertBefore(temp, data);
+    }
+  };
+
+
+
+// Deletion
+
+
 
     // How many things are stored in this list? 
     unsigned int NodeCount() const {
@@ -119,28 +177,6 @@ class LinkedList {
         temp = temp->prev;
       }
     };
-
-// Instructions
-  // In this part you will implement various functions to access parts of the container:
-
-  // Getting the head and tail nodes:
-
-  // Head()
-  // Tail()
-  // Getting a specific node based on an index--allowing this container to be used as though it were an array**
-
-  // GetNode()
-  // operator[]()
-  // Finding the FIRST node based on a value
-
-  // Find()
-  // Finding ALL nodes based on a value
-
-  // FindAll
-  // You will also implement the other two members of the Big Three
-
-  // The copy constructor
-  // The copy assignment operator
 
 // accessors
   Node* Head() {
@@ -205,6 +241,7 @@ class LinkedList {
     }
   };
 
+
 // Operators
   // Overloaded subscript operator. Takes an index, and returns data from the index-th node. Throws an out_of_range exception for an invalid index. Const and non-const versions. 
   const T& operator[](unsigned int index) const;
@@ -219,8 +256,24 @@ class LinkedList {
     return temp->data;
   };
 
+  // Overloaded equality operator. Given listA and listB, is listA equal to listB? What would make one Linked List equal to another? If each of its nodes were equal to the corresponding node of the other. (Similar to comparing two arrays, just with non-contiguous data). 
+  bool operator==(const LinkedList<T>& rhs) const {
+    if (nodeCount != rhs.nodeCount) {
+      return false;
+    }
+    Node *temp = head;
+    Node *temp2 = rhs.head;
+    while (temp != nullptr) {
+      if (temp->data != temp2->data) {
+        return false;
+      }
+      temp = temp->next;
+      temp2 = temp2->next;
+    }
+    return true;
+  };
+
   // Assignment operator. After listA = listB, listA == listB is true. Can of your existing functions to make write this one? (Hint: Yes you you utilize any can.) 
-  bool operator==(const LinkedList<T>& rhs) const;
   LinkedList<T>& operator=(const LinkedList<T>& rhs) {
     if (this == &rhs) {
       return *this;
