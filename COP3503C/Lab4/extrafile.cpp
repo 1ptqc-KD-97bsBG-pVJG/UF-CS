@@ -26,3 +26,17 @@ void Ship::PrintShip() {
     cout << "Total Firepower: " << totalFirePower << endl;
   }
 }
+
+
+vector<Ship::Weapons> &Ship::GetWeapons() {
+  return weapons;
+}
+
+int Ship::TotalFirePower() {
+  int totalFirePower = 0;
+
+  for (unsigned int i = 0; i < weapons.size(); i++) {
+    totalFirePower += weapons[i].powerRating;
+  }
+  return totalFirePower;
+}

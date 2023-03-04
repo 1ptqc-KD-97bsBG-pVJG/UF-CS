@@ -55,8 +55,8 @@ class Ship {
     // functions
     void PrintShip();
 
-    int TotalPowerConsumption();
+    int TotalFirePower();
 
-    vector<Weapons> GetWeapons();
+    vector<Weapons> &GetWeapons();
 
 };
