@@ -11,7 +11,7 @@ void Ship::PrintShip() {
   cout << "Maximum Warp: " << maxWarpSpeed << endl;
 
   // print weapons
-  cout << "Araments: " << endl;
+  cout << "Armaments: " << endl;
 
   if (weapons.size() == 0) {
     cout << "Unarmed" << endl;
@@ -23,7 +23,7 @@ void Ship::PrintShip() {
       cout << weapons[i].weaponName << ", " << weapons[i].powerRating << ", " << weapons[i].powerConsumption << endl;
       totalFirePower += weapons[i].powerRating;
     }
-    cout << "Total Firepower: " << totalFirePower << endl;
+    cout << "Total firepower: " << totalFirePower << endl;
   }
 }
 

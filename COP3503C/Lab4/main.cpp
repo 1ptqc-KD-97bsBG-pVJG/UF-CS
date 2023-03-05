@@ -6,7 +6,65 @@
 using namespace std;
 
   // function for loading file
+  int LoadShipsFromFile(vector<Ship> &ships, string filePath, int counter) {
+    ifstream ShipsFile(filePath, ios_base::binary);
 
+    unsigned int amount;
+    ShipsFile.read((char *)&amount, sizeof(amount));
+    // loop through all ships in the file
+    for (unsigned int i = 0; i < amount; i++) {
+      // read name
+      string name;
+      unsigned int length;
+      ShipsFile.read((char *)&length, sizeof(length));
+
+      char *temp = new char[length];
+      ShipsFile.read(temp, length);
+      name = temp;
+      delete[] temp;
+
+      // read class
+      string shipClass;
+      ShipsFile.read((char *)&length, sizeof(length));
+
+      temp = new char[length];
+      ShipsFile.read(temp, length);
+      shipClass = temp;
+      delete[] temp;
+
+      // read length, shield capacity, and max warp speed
+      short shipLength;
+      ShipsFile.read((char *)&shipLength, sizeof(shipLength));
+      int shieldCapacity;
+      ShipsFile.read((char *)&shieldCapacity, sizeof(shieldCapacity));
+      float maxWarpSpeed;
+      ShipsFile.read((char *)&maxWarpSpeed, sizeof(maxWarpSpeed));
+
+      Ship shipFromFile(name, shipClass, shipLength, shieldCapacity, maxWarpSpeed);
+      ships.push_back(shipFromFile);
+
+      // read the inventory (weapons)
+      unsigned int weaponCount;
+      ShipsFile.read((char *)&weaponCount, sizeof(weaponCount));
+      for (unsigned int j = 0; j < weaponCount; j++) {
+        ShipsFile.read((char *)&length, sizeof(length));
+        temp = new char[length];
+        ShipsFile.read(temp, length);
+        string weaponName = temp;
+        delete[] temp;
+
+        int powerRating;
+        ShipsFile.read((char *)&powerRating, sizeof(powerRating));
+        float powerConsumption;
+        ShipsFile.read((char *)&powerConsumption, sizeof(powerConsumption));
+
+        Ship::Weapons weaponsFromFile = Ship::Weapons(weaponName, powerRating, powerConsumption);
+        ships[counter].GetWeapons().push_back(weaponsFromFile);
+      }
+      counter++;
+    }
+    return counter;
+  }
 
 
   // function for printing ships
@@ -47,7 +105,7 @@ using namespace std;
   }
 
   // print the ship which has the least firepower
-  void PrintOverallMostPowerfulShip(vector<Ship> &ships) {
+  void PrintOverallLeastPowerfulShip(vector<Ship> &ships) {
     int leastFirePower = ships[0].TotalFirePower();
     int leastPowerfulShipIndex = 0;
 
@@ -82,29 +140,23 @@ int main() {
 	int option;
 	cin >> option;
 
+  // create inital ships vector
+  int counter = 0;
+  vector<Ship> ships;
    /* Load files here */
-  if (option == 3) {
-    ifstream friendlyships("friendlyships.shp");
-    ifstream enemyships("enemyships.shp");
-    if (!friendlyships || !enemyships) {
-      cout << "Error opening file" << endl;
-      return 1;
-    }
-  } else if (option == 1) {
-    ifstream friendlyships("friendlyships.shp");
-    if (!friendlyships) {
-      cout << "Error opening file" << endl;
-      return 1;
-    }
-  } else if (option == 2) {
-    ifstream enemyships("enemyships.shp");
-    if (!enemyships) {
-      cout << "Error opening file" << endl;
-      return 1;
-    }
-  } else {
-    cout << "Invalid option" << endl;
-    return 1;
+  switch (option) {
+    case 1:
+      LoadShipsFromFile(ships, "friendlyships.shp", counter);
+      break;
+    case 2:
+      LoadShipsFromFile(ships, "enemyships.shp", counter);
+      break;
+    case 3:
+      counter = LoadShipsFromFile(ships, "friendlyships.shp", counter);
+      LoadShipsFromFile(ships, "enemyships.shp", counter);
+      break;
+    default:
+      break;
   }
 
 
@@ -117,6 +169,24 @@ int main() {
 	cin >> option;
 	
 	/* Work your magic here */
-	
+  switch (option) {
+    case 1:
+      PrintShips(ships);
+      break;
+    case 2:
+      PrintMostPowerfulWeaponShip(ships);
+      break;
+    case 3:
+      PrintOverallMostPowerfulShip(ships);
+      break;
+    case 4:
+      PrintOverallLeastPowerfulShip(ships);
+      break;
+    case 5:
+      PrintUnarmedShips(ships);
+      break;
+    default:
+      break;
+  }
    return 0;
-};
+}
