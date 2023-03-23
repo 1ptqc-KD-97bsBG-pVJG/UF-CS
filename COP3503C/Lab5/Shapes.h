@@ -56,3 +56,79 @@ class Square : public Shape2D {
 
     ~Square() {}
 };
+
+class Triangle : public Shape2D {
+  public:
+    Triangle();
+    Triangle(float baseLength, float height);
+
+    // four functions required by abstract base class Shape2D
+    float Area() const;
+    string GetName2D() const;
+    void Scale(float scaleFactor);
+    void Display() const;
+
+    ~Triangle() {}
+};
+
+class Circle : public Shape2D {
+  public:
+    Circle();
+    Circle(float radius);
+    
+    // four functions required by abstract base class Shape2D
+    float Area() const;
+    string GetName2D() const;
+    void Scale(float scaleFactor);
+    void Display() const;
+
+    ~Circle() {}
+};
+
+class TriangularPyramid : public Shape3D, private Triangle {
+  public:
+    TriangularPyramid();
+    TriangularPyramid(float height, float length, float baseHeight);
+
+    float Volume() const;
+    string GetName3D() const;
+    void Scale(float scaleFactor);
+    void Display() const;
+
+    ~TriangularPyramid() {}
+
+  private:
+    float height;
+};
+
+class Cylinder : public Shape3D, private Circle {
+  public:
+    Cylinder();
+    Cylinder(float height, float radius);
+
+    float Volumne() const;
+    string GetName3D() const;
+    void Scale(float scaleFactor);
+    void Display() const;
+
+    ~Cylinder() {}
+
+  private:
+    float height;
+};
+
+class Sphere : public Shape3D, private Circle {
+  public:
+    Sphere();
+    Sphere(float radius);
+
+    float Volumne() const;
+    string GetName3D() const;
+    void Scale(float scaleFactor);
+    void Display() const;
+
+    ~Sphere() {}
+
+  private:
+    float radius;
+};
