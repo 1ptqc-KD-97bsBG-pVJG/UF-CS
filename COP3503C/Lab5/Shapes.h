@@ -1,4 +1,5 @@
 #include <vector>
+#include <string>
 using namespace std;
 
 // base class
@@ -56,6 +57,8 @@ class Square : public Shape2D {
     void Display() const;
 
     ~Square() {}
+  private:
+    float side;
 };
 
 class Triangle : public Shape2D {
@@ -70,6 +73,10 @@ class Triangle : public Shape2D {
     void Display() const;
 
     ~Triangle() {}
+  
+  private:
+    float base;
+    float height;
 };
 
 class Circle : public Shape2D {
@@ -84,6 +91,9 @@ class Circle : public Shape2D {
     void Display() const;
 
     ~Circle() {}
+
+  private:
+    float radius;
 };
 
 class TriangularPyramid : public Shape3D, private Triangle {

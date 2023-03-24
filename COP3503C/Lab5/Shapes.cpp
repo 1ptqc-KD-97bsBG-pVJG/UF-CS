@@ -2,7 +2,7 @@
 #include <iostream>
 #include <string>
 
-const float PI = 3.1459f;
+const float PI = 3.14159f;
 
 // 2D shape
   // Display area of 2D shape
@@ -70,7 +70,7 @@ const float PI = 3.1459f;
 
   void Square::Display() const {
     Shape2D::ShowArea();
-    cout << "Length of the side: " << side << endl;
+    cout << "Length of a side: " << side << endl;
   }
 
 // Triangle class definitions
@@ -90,6 +90,11 @@ const float PI = 3.1459f;
 
   string Triangle::GetName2D() const {
     return "Triangle";
+  }
+
+  void Triangle::Scale(float scaleFactor) {
+    base *= scaleFactor;
+    height *= scaleFactor;
   }
 
   void Triangle::Display() const {
@@ -125,13 +130,13 @@ const float PI = 3.1459f;
   }
 
 // TriangularPyramid class definitions
-  TriangularPyramid::TriangularPyramid() : Triangle() {
+  TriangularPyramid::TriangularPyramid() {
     height = 0;
     Triangle();
   }
 
   TriangularPyramid::TriangularPyramid(float height, float length, float baseHeight) : Triangle(length, baseHeight) {
-    height = height;
+    this->height = height;
   }
 
   float TriangularPyramid::Volume() const {
@@ -149,7 +154,7 @@ const float PI = 3.1459f;
 
   void TriangularPyramid::Display() const {
     Shape3D::ShowVolume();
-    cout << "The height is: " << height << end;
+    cout << "The height is: " << height << endl;
     Triangle::Display();
   }
 
@@ -159,7 +164,7 @@ const float PI = 3.1459f;
   }
 
   Cylinder::Cylinder(float height, float radius) : Circle(radius) {
-    height = height;
+    this->height = height;
   }
 
   float Cylinder::Volume() const {
@@ -187,7 +192,7 @@ const float PI = 3.1459f;
   }
 
   Sphere::Sphere(float radius) : Circle(radius) {
-    radius = radius;
+    this->radius = radius;
   }
 
   float Sphere::Volume() const {
