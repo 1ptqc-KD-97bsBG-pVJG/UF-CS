@@ -1,3 +1,4 @@
+#include <vector>
 using namespace std;
 
 // base class
@@ -29,8 +30,8 @@ class Shape2D : virtual public Shape {
 // derived class
 class Shape3D : virtual public Shape {
   public:
-    virtual float Volumne() const = 0;
-    void ShowVolumne() const;
+    virtual float Volume() const = 0;
+    void ShowVolume() const;
     virtual string GetName3D() const = 0;
 
     // operator overloading
@@ -106,7 +107,7 @@ class Cylinder : public Shape3D, private Circle {
     Cylinder();
     Cylinder(float height, float radius);
 
-    float Volumne() const;
+    float Volume() const;
     string GetName3D() const;
     void Scale(float scaleFactor);
     void Display() const;
@@ -122,7 +123,7 @@ class Sphere : public Shape3D, private Circle {
     Sphere();
     Sphere(float radius);
 
-    float Volumne() const;
+    float Volume() const;
     string GetName3D() const;
     void Scale(float scaleFactor);
     void Display() const;
