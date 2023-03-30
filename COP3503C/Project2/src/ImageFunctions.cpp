@@ -53,9 +53,6 @@ Image Multiply(Image &firstImage, Image &secondImage) {
 }
 
 
-
-
-
 Image Rotate(Image &inputImage) {
   Image resultImage;
 

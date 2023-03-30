@@ -1,38 +1,111 @@
 #include "Image.h"
 #include "ImageFunctions.h"
+#include <filesystem>
 #include <iostream>
 #include <string>
 
+int compareImages(Image &firstImage, Image &secondImage) {
+    if (firstImage == secondImage) {
+        cout << "Images are the same!" << endl;
+        return 1;
+    } else {
+        cout << "Images are different. Test has failed!" << endl;
+        return 0;
+    }
+}
+
 int main()
 {
-    std::string inputFilename = "C:/Users/dylan/Desktop/temporary downloads/project 2 temp/car.tga";
-    std::string outputFilename = "output.tga";
+    int passedTests = 0;
+    double totalTests = 12;
+    
+    // define images
+    Image layer1;
+    Image layer2;
+    Image pattern1;
+    Image pattern2;
+    Image text1;
+    Image text2;
+    Image car;
+    Image circles;
+    Image layer_red;
+    Image layer_green;
+    Image layer_blue;
 
-    // Create an Image object and load the input file
-    Image image;
-    image.loadImage(inputFilename);
+    // load images
+    layer1.loadImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/input/layer1.tga");
+    layer2.loadImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/input/layer2.tga");
+    pattern1.loadImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/input/pattern1.tga");
+    pattern2.loadImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/input/pattern2.tga");
+    text1.loadImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/input/text.tga");
+    text2.loadImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/input/text2.tga");
+    car.loadImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/input/car.tga");
+    circles.loadImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/input/circles.tga");
+    layer_red.loadImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/input/layer_red.tga");
+    layer_green.loadImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/input/layer_green.tga");
+    layer_blue.loadImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/input/layer_blue.tga");
 
-    // Get the header and pixel data from the Image object
-    Image::Header header = image.getHeader();
-    std::vector<Image::Pixel> pixels = image.getPixels();
+    // define example images
+    Image EXAMPLE_part1;
+    Image EXAMPLE_part2;
+    Image EXAMPLE_part3;
+    Image EXAMPLE_part4;
+    Image EXAMPLE_part5;
+    Image EXAMPLE_part6;
+    Image EXAMPLE_part7;
+    Image EXAMPLE_part8;
+    Image EXAMPLE_part9;
+    Image EXAMPLE_part10;
 
-    // Print some information about the TGA file
-    std::cout << "Image width: " << header.width << std::endl;
-    std::cout << "Image height: " << header.height << std::endl;
-    std::cout << "Number of pixels: " << pixels.size() << std::endl;
+    // load example images
+    EXAMPLE_part1.loadImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/examples/EXAMPLE_part1.tga");
+    EXAMPLE_part2.loadImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/examples/EXAMPLE_part2.tga");
+    EXAMPLE_part3.loadImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/examples/EXAMPLE_part3.tga");
+    EXAMPLE_part4.loadImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/examples/EXAMPLE_part4.tga");
+    EXAMPLE_part5.loadImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/examples/EXAMPLE_part5.tga");
+    EXAMPLE_part6.loadImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/examples/EXAMPLE_part6.tga");
+    EXAMPLE_part7.loadImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/examples/EXAMPLE_part7.tga");
+    EXAMPLE_part8.loadImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/examples/EXAMPLE_part8.tga");
+    EXAMPLE_part9.loadImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/examples/EXAMPLE_part9.tga");
+    EXAMPLE_part10.loadImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/examples/EXAMPLE_part10.tga");
 
-    // Modify the pixel data (for example, invert the colors)
-    // for (auto& pixel : pixels)
-    // {
-    //     pixel.red = 255 - pixel.red;
-    //     pixel.green = 255 - pixel.green;
-    //     pixel.blue = 255 - pixel.blue;
-    // }
-    cout << "Rotating..." << endl;
+    // TESTS START
+
+    // Part 1: Multiply
+    cout << "Part 1: Multiply" << endl;
+    Image part1 = Multiply(layer1, pattern1);
+    part1.writeToImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/output/part1.tga");
+    passedTests += compareImages(part1, EXAMPLE_part1);
 
 
-    // Write the modified pixel data to a new TGA file
-    Rotate(image).writeToImage(outputFilename);
+    // std::string inputFilename = "C:/Users/dylan/Desktop/temporary downloads/project 2 temp/car.tga";
+    // std::string outputFilename = "output.tga";
+
+    // // Create an Image object and load the input file
+    // Image image;
+    // image.loadImage(inputFilename);
+
+    // // Get the header and pixel data from the Image object
+    // Image::Header header = image.getHeader();
+    // std::vector<Image::Pixel> pixels = image.getPixels();
+
+    // // Print some information about the TGA file
+    // std::cout << "Image width: " << header.width << std::endl;
+    // std::cout << "Image height: " << header.height << std::endl;
+    // std::cout << "Number of pixels: " << pixels.size() << std::endl;
+
+    // // Modify the pixel data (for example, invert the colors)
+    // // for (auto& pixel : pixels)
+    // // {
+    // //     pixel.red = 255 - pixel.red;
+    // //     pixel.green = 255 - pixel.green;
+    // //     pixel.blue = 255 - pixel.blue;
+    // // }
+    // cout << "Rotating..." << endl;
+
+
+    // // Write the modified pixel data to a new TGA file
+    // Rotate(image).writeToImage(outputFilename);
 
     return 0;
 }

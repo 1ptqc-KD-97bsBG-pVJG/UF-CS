@@ -125,3 +125,17 @@ void Image::setUnsignedInts() {
     pixels[i].red = pixels[i].redInt;
   }
 }
+
+bool Image::operator==(Image &other) {
+  for (unsigned int i = 0; i < pixels.size(); i++) {
+    if (
+      pixels[i].blue != other.pixels[i].blue ||
+      pixels[i].green != other.pixels[i].green ||
+      pixels[i].red != other.pixels[i].red
+    ) {
+      return false;
+    } else {
+      return true;
+    } 
+  }
+}

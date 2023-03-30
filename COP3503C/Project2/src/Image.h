@@ -50,7 +50,7 @@ class Image {
     void setUnsignedInts();
 
     // might not be const
-    bool operator==(const Image &image) const;
+    bool operator==(Image &image);
     
 
   private:
