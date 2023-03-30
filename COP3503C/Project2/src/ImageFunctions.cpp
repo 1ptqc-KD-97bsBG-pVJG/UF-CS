@@ -66,22 +66,15 @@ Image Rotate(Image &inputImage) {
 
   vector<Image::Pixel> resultPixels;
 
-  for (unsigned int i = 0; i < inputPixels.size(); i++) {
-    Image::Pixel resultPixel;
-
-    unsigned int redPixelInt = inputPixels[i].redInt;
-    unsigned char redPixelChar = inputImage.ConvertIntToChar(redPixelInt);
-    resultPixel.red = redPixelChar;
-
-    unsigned int greenPixelInt = inputPixels[i].greenInt;
-    unsigned char greenPixelChar = inputImage.ConvertIntToChar(greenPixelInt);
-    resultPixel.green = greenPixelChar;
-
-    unsigned int bluePixelInt = inputPixels[i].blueInt;
-    unsigned char bluePixelChar = inputImage.ConvertIntToChar(bluePixelInt);
-    resultPixel.blue = bluePixelChar;
-
-    resultPixels.push_back(resultPixel);
+  // rotate the input image 90 degrees clockwise and store the result in resultImage
+  for (unsigned int i = 0; i < header.width; i++) {
+    for (unsigned int j = 0; j < header.height; j++) {
+      Image::Pixel resultPixel;
+      resultPixel.blue = inputPixels[(header.width * (header.height - j - 1)) + i].blue;
+      resultPixel.green = inputPixels[(header.width * (header.height - j - 1)) + i].green;
+      resultPixel.red = inputPixels[(header.width * (header.height - j - 1)) + i].red;
+      resultPixels.push_back(resultPixel);
+    }
   }
 
 
