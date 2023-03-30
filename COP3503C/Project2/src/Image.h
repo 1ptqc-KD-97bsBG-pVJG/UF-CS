@@ -42,8 +42,8 @@ class Image {
     vector<Pixel> getPixels();
 
     // setters
-    void setHeader(Header header);
-    void setPixels(vector<Pixel> pixels);
+    void setHeader(Header &header);
+    void setPixels(vector<Pixel> &pixels);
 
     
 

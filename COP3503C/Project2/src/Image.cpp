@@ -26,7 +26,7 @@ void Image::loadImage(string filename) {
 
   // read pixels and add them to the newly created pixel vector
   unsigned int amountOfPixels = header.width * header.height;
-  for (int i = 0; i < amountOfPixels; i++) {
+  for (unsigned int i = 0; i < amountOfPixels; i++) {
     File.read((char*)&pixel.blue, sizeof(pixel.blue));
     File.read((char*)&pixel.green, sizeof(pixel.green));
     File.read((char*)&pixel.red, sizeof(pixel.red));
@@ -65,7 +65,7 @@ void Image::writeToImage(string filename) {
 
   // write pixels
   unsigned int amountOfPixels = header.width * header.height;
-  for (int i = 0; i < amountOfPixels; i++) {
+  for (unsigned int i = 0; i < amountOfPixels; i++) {
     File.write((char*)&pixels[i].blue, sizeof(pixels[i].blue));
     File.write((char*)&pixels[i].green, sizeof(pixels[i].green));
     File.write((char*)&pixels[i].red, sizeof(pixels[i].red));
@@ -73,4 +73,33 @@ void Image::writeToImage(string filename) {
 
   // close file
   File.close();
+}
+
+Image::Header Image::getHeader() {
+  return header;
+}
+
+vector<Image::Pixel> Image::getPixels() {
+  return pixels;
+}
+
+void Image::setHeader(Header &data) {
+  header.idLength = data.idLength;
+  header.colorMapType = data.colorMapType;
+  header.dataTypeCode = data.dataTypeCode;
+  header.colorMapOrigin = data.colorMapOrigin;
+  header.colorMapLength = data.colorMapLength;
+  header.colorMapDepth = data.colorMapDepth;
+  header.xOrigin = data.xOrigin;
+  header.yOrigin = data.yOrigin;
+  header.width = data.width;
+  header.height = data.height;
+  header.bitsPerPixel = data.bitsPerPixel;
+  header.imageDescriptor = data.imageDescriptor;
+}
+
+void Image::setPixels(vector<Pixel> &data) {
+  for (unsigned int i = 0; i < data.size(); i++){
+    pixels.push_back(data[i]);            
+  }
 }

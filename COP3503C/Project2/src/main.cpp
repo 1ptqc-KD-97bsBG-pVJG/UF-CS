@@ -4,7 +4,7 @@
 
 int main()
 {
-    std::string inputFilename = "car.tga";
+    std::string inputFilename = "C:/Users/dylan/Desktop/temporary downloads/project 2 temp/car.tga";
     std::string outputFilename = "output.tga";
 
     // Create an Image object and load the input file
