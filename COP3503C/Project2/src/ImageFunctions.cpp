@@ -66,15 +66,25 @@ Image Rotate(Image &inputImage) {
 
   vector<Image::Pixel> resultPixels;
 
-  for (unsigned int i = inputPixels.size(); i > 0; i--) {
+  for (unsigned int i = 0; i < inputPixels.size(); i++) {
     Image::Pixel resultPixel;
 
-    resultPixel.red = inputPixels[i].red;
-    resultPixel.green = inputPixels[i].green;
-    resultPixel.blue = inputPixels[i].blue;
+    unsigned int redPixelInt = inputPixels[i].redInt;
+    unsigned char redPixelChar = inputImage.ConvertIntToChar(redPixelInt);
+    resultPixel.red = redPixelChar;
+
+    unsigned int greenPixelInt = inputPixels[i].greenInt;
+    unsigned char greenPixelChar = inputImage.ConvertIntToChar(greenPixelInt);
+    resultPixel.green = greenPixelChar;
+
+    unsigned int bluePixelInt = inputPixels[i].blueInt;
+    unsigned char bluePixelChar = inputImage.ConvertIntToChar(bluePixelInt);
+    resultPixel.blue = bluePixelChar;
 
     resultPixels.push_back(resultPixel);
   }
+
+
   resultImage.setPixels(resultPixels);
 
   return resultImage;
