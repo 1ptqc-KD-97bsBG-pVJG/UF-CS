@@ -75,7 +75,7 @@ Image Rotate(Image &inputImage) {
 
     resultPixels.push_back(resultPixel);
   }
-  resultImage.setPixels(resultPixels);
+  resultImage.setPixels(&resultPixels);
 
   return resultImage;
 }
