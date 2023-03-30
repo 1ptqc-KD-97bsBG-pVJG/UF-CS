@@ -28,10 +28,11 @@ int main()
     //     pixel.green = 255 - pixel.green;
     //     pixel.blue = 255 - pixel.blue;
     // }
-    Rotate(image).writeToImage(outputFilename);
+    cout << "Rotating..." << endl;
+
 
     // Write the modified pixel data to a new TGA file
-    image.writeToImage(outputFilename);
+    Rotate(image).writeToImage(outputFilename);
 
     return 0;
 }
