@@ -2,9 +2,35 @@
 #include <map>
 #include <random>
 #include <ctime>
+#include <fstream>
+#include <sstream>
+#include <string>
 using namespace std;
 
 mt19937 random_mt;
+class State {
+public:
+    string name;
+    int population, perCapitaIncome, medianHouseholdIncome, numHouseholds;
+
+    State() : name(""), population(0), perCapitaIncome(0), medianHouseholdIncome(0), numHouseholds(0) {}
+
+    State(string name, int population, int perCapitaIncome, int medianHouseholdIncome, int numHouseholds) {
+        this->name = name;
+        this->population = population;
+        this->perCapitaIncome = perCapitaIncome;
+        this->medianHouseholdIncome = medianHouseholdIncome;
+        this->numHouseholds = numHouseholds;
+    }
+
+    void display() const {
+        cout << name << endl;
+        cout << "Population: " << population << endl;
+        cout << "Per Capita Income: " << perCapitaIncome << endl;
+        cout << "Median Household Income: " << medianHouseholdIncome << endl;
+        cout << "Number of Households: " << numHouseholds << endl;
+    }
+};
 
 int Random(int min, int max)
 {
@@ -35,40 +61,80 @@ void RollDice(int numRolls, int numSides) {
   }
 }
 
+int main(){
+  cout << "1. Random Numbers\n";
+  cout << "2. State Info\n";
 
+  int option;
+  cin >> option;
 
-int main()
-{
-	cout << "1. Random Numbers\n";
-	cout << "2. State Info\n";
+  if (option == 1)
+  {
+      int randomSeed, numRolls, numSides;
+      cout << "Random seed value: ";
+      cin >> randomSeed;
+      random_mt.seed(randomSeed);
 
-	int option;
-	cin >> option;
+      cout << "Number of times to roll the die: ";
+      cin >> numRolls;
 
-	if (option == 1)
-	{
-		int randomSeed, numRolls, numSides;
-		cout << "Random seed value: ";
-		cin >> randomSeed;
-		random_mt.seed(randomSeed);
+      cout << "Number of sides on this die: ";
+      cin >> numSides;
 
+      // Roll Dice
+      RollDice(numRolls, numSides);
+  }
+  else if (option == 2)
+  {
+      // Load the states
+      map<string, State> states;
+      string record;
 
-		cout << "Number of times to roll the die: ";
-    cin >> numRolls;
+      ifstream File("states.csv");
 
-		cout << "Number of sides on this die: ";
-    cin >> numSides;
+      while (getline(File, record)) {
+          stringstream ss(record);
+          State data;
+          string tempStr;
 
-		// Roll Dice
-    RollDice(numRolls, numSides);
-	}
-	else if (option == 2)
-	{
-	   // Load the states
-	   
-	   // Get input for option 1 (show all states) or 2 (do a search for a particular state)
+          try {
+            getline(ss, data.name, ',');
+            getline(ss, tempStr, ',');
+            data.perCapitaIncome = stoi(tempStr);
+            getline(ss, tempStr, ',');
+            data.population = stoi(tempStr);
+            getline(ss, tempStr, ',');
+            data.medianHouseholdIncome = stoi(tempStr);
+            getline(ss, tempStr);
+            data.numHouseholds = stoi(tempStr);
+            states[data.name] = data;
+          } catch (const std::invalid_argument &e) {
+              cerr << "Invalid data format in the record: " << record << endl;
+          }
+      }
+      File.close();
 
-	}
+      cout << "1. Print all states" << endl;
+      cout << "2. Search for a state" << endl;
+      int input;
+      cin >> input;
 
-	return 0;
+      if (input == 1) {
+          for (const auto &pair : states)
+          {
+              pair.second.display();
+          }
+      } else if (input == 2) {
+          string searchKey;
+          cin >> searchKey;
+          auto searchResult = states.find(searchKey);
+          if (searchResult != states.end()) {
+              searchResult->second.display();
+          } else {
+              cout << "No match found for " << searchKey << endl;
+          }
+      }
+  }
+
+  return 0;
 }
