@@ -77,35 +77,11 @@ int main()
     part1.writeToImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/output/part1.tga");
     passedTests += compareImages(part1, EXAMPLE_part1);
 
-
-    // std::string inputFilename = "C:/Users/dylan/Desktop/temporary downloads/project 2 temp/car.tga";
-    // std::string outputFilename = "output.tga";
-
-    // // Create an Image object and load the input file
-    // Image image;
-    // image.loadImage(inputFilename);
-
-    // // Get the header and pixel data from the Image object
-    // Image::Header header = image.getHeader();
-    // std::vector<Image::Pixel> pixels = image.getPixels();
-
-    // // Print some information about the TGA file
-    // std::cout << "Image width: " << header.width << std::endl;
-    // std::cout << "Image height: " << header.height << std::endl;
-    // std::cout << "Number of pixels: " << pixels.size() << std::endl;
-
-    // // Modify the pixel data (for example, invert the colors)
-    // // for (auto& pixel : pixels)
-    // // {
-    // //     pixel.red = 255 - pixel.red;
-    // //     pixel.green = 255 - pixel.green;
-    // //     pixel.blue = 255 - pixel.blue;
-    // // }
-    // cout << "Rotating..." << endl;
-
-
-    // // Write the modified pixel data to a new TGA file
-    // Rotate(image).writeToImage(outputFilename);
+    // Part 2: Subtract
+    cout << "Part 2: Subtract" << endl;
+    Image part2 = Subtract(car, layer2);
+    part2.writeToImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/output/part2.tga");
+    passedTests += compareImages(part2, EXAMPLE_part2);
 
     return 0;
 }

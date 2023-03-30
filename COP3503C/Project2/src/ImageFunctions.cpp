@@ -52,6 +52,40 @@ Image Multiply(Image &firstImage, Image &secondImage) {
   return imageResult;
 }
 
+Image Subtract(Image &firstImage, Image &secondImage) {
+  Image imageResult;
+
+  Image::Header header = firstImage.getHeader();
+  imageResult.setHeader(header);
+  firstImage.setUnsignedInts();
+  secondImage.setUnsignedInts();
+
+  vector<Image::Pixel> firstPixels = firstImage.getPixels();
+  vector<Image::Pixel> secondPixels = secondImage.getPixels();
+  vector<Image::Pixel> resultPixels;
+
+  for (unsigned int i = 0; i < firstPixels.size(); i++) {
+    Image::Pixel resultPixel;
+    
+    unsigned int redPixelInt = (unsigned int)(scale(firstPixels[i].redInt - secondPixels[i].redInt));
+    unsigned char redPixelChar = firstImage.ConvertIntToChar(redPixelInt);
+    resultPixel.red = redPixelChar;
+
+    unsigned int greenPixelInt = (unsigned int)(scale(firstPixels[i].greenInt - secondPixels[i].greenInt));
+    unsigned char greenPixelChar = firstImage.ConvertIntToChar(greenPixelInt);
+    resultPixel.green = greenPixelChar;
+
+    unsigned int bluePixelInt = (unsigned int)(scale(firstPixels[i].blueInt - secondPixels[i].blueInt));
+    unsigned char bluePixelChar = firstImage.ConvertIntToChar(bluePixelInt);
+    resultPixel.blue = bluePixelChar;
+
+    resultPixels.push_back(resultPixel);
+  }
+  imageResult.setPixels(resultPixels);
+
+  return imageResult;
+}
+
 
 Image Rotate(Image &inputImage) {
   Image resultImage;
