@@ -9,13 +9,13 @@ class Image {
   public:
     struct Pixel
       {
-        unsigned int red;
-        unsigned int green;
-        unsigned int blue;
+        unsigned char red;
+        unsigned char green;
+        unsigned char blue;
 
-        unsigned char redChar;
-        unsigned char greenChar;
-        unsigned char blueChar;
+        unsigned int redInt;
+        unsigned int greenInt;
+        unsigned int blueInt;
       };
 
     struct Header {
@@ -37,6 +37,9 @@ class Image {
     void loadImage(string filename);
     void writeToImage(string filename);
 
+    unsigned int ConvertCharToInt(unsigned char charValue);
+    unsigned int ConvertIntToChar(unsigned int intValue);
+
     // getters
     Header getHeader();
     vector<Pixel> getPixels();
@@ -44,12 +47,14 @@ class Image {
     // setters
     void setHeader(Header &header);
     void setPixels(vector<Pixel> &pixels);
+    void setUnsignedInts();
 
+    // might not be const
+    bool operator==(const Image &image) const;
     
 
-  
   private:
     Header header;
-    vector<Pixel> pixels;
     Pixel pixel;
+    vector<Pixel> pixels;
 };

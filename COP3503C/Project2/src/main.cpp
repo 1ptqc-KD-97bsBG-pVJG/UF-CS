@@ -1,4 +1,5 @@
 #include "Image.h"
+#include "ImageFunctions.h"
 #include <iostream>
 #include <string>
 
@@ -21,12 +22,13 @@ int main()
     std::cout << "Number of pixels: " << pixels.size() << std::endl;
 
     // Modify the pixel data (for example, invert the colors)
-    for (auto& pixel : pixels)
-    {
-        pixel.red = 255 - pixel.red;
-        pixel.green = 255 - pixel.green;
-        pixel.blue = 255 - pixel.blue;
-    }
+    // for (auto& pixel : pixels)
+    // {
+    //     pixel.red = 255 - pixel.red;
+    //     pixel.green = 255 - pixel.green;
+    //     pixel.blue = 255 - pixel.blue;
+    // }
+    Rotate(image).writeToImage(outputFilename);
 
     // Write the modified pixel data to a new TGA file
     image.writeToImage(outputFilename);

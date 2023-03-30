@@ -31,9 +31,9 @@ void Image::loadImage(string filename) {
     File.read((char*)&pixel.green, sizeof(pixel.green));
     File.read((char*)&pixel.red, sizeof(pixel.red));
     
-    pixel.blueChar = pixel.blue;
-    pixel.greenChar = pixel.green;
-    pixel.redChar = pixel.red;
+    pixel.blueInt = ConvertCharToInt(pixel.blue);
+    pixel.greenInt = ConvertCharToInt(pixel.green);
+    pixel.redInt = pixel.red;
     
     pixels.push_back(pixel);
   }
@@ -75,6 +75,20 @@ void Image::writeToImage(string filename) {
   File.close();
 }
 
+unsigned int Image::ConvertCharToInt(unsigned char charValue) {
+  // Converts unsigned char to unsigned int by removing null terminator and type casting
+  unsigned int intValue = (unsigned int)(charValue - '\0');
+  return intValue;
+
+}
+
+unsigned int Image::ConvertIntToChar(unsigned int intValue) {
+  // Converts unsigned int to unsigned char by adding null terminator and type casting
+  unsigned char charValue = (unsigned char)(intValue + '\0');
+  return charValue;
+}
+
+
 Image::Header Image::getHeader() {
   return header;
 }
@@ -101,5 +115,13 @@ void Image::setHeader(Header &data) {
 void Image::setPixels(vector<Pixel> &data) {
   for (unsigned int i = 0; i < data.size(); i++){
     pixels.push_back(data[i]);            
+  }
+}
+
+void Image::setUnsignedInts() {
+  for (unsigned int i = 0; i < pixels.size(); i++) {
+    pixels[i].blue = pixels[i].blueInt;
+    pixels[i].green = pixels[i].greenInt;
+    pixels[i].red = pixels[i].redInt;
   }
 }
