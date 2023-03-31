@@ -239,7 +239,8 @@ Image scaleRed(Image &firstImage) {
 
     resultPixel.green = firstPixels[i].green;
 
-    resultPixel.blue = 0;
+    // remove all blue
+    resultPixel.blue = firstPixels[i].red;
     resultPixels.push_back(resultPixel);
   }
   imageResult.setPixels(resultPixels);

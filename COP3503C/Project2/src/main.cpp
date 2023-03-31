@@ -106,7 +106,7 @@ int main()
     tempImage2.writeToImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/output/tempImage2.tga");
     Image officialTempImage2;
     officialTempImage2.loadImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/output/tempImage2.tga");
-    Image part4 = Subtract(pattern2, officialTempImage2);
+    Image part4 = Subtract(officialTempImage2, pattern2);
     part4.writeToImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/output/part4.tga");
     passedTests += compareImages(part4, EXAMPLE_part4);
 
