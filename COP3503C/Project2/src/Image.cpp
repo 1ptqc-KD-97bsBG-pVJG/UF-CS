@@ -81,7 +81,6 @@ void Image::writeToImage(string filename) {
 }
 
 unsigned int Image::ConvertCharToInt(unsigned char charValue) {
-  // Converts unsigned char to unsigned int by removing null terminator and type casting
   unsigned int intValue = (unsigned int)(charValue - '\0');
   return intValue;
 
