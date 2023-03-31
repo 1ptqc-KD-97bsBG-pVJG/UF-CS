@@ -129,18 +129,23 @@ int main()
     passedTests += compareImages(part7, EXAMPLE_part7);
 
     // Part 8: Split into three channels
+    int part8PassedTests = 0;
     cout << "Part 8: Split Into Channels" << endl;
     Image part8 = splitChannels("red", car);
     part8.writeToImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/output/part8_r.tga");
-    passedTests += compareImages(part8, EXAMPLE_part8_r);
+    part8PassedTests += compareImages(part8, EXAMPLE_part8_r);
     
     Image part8_g = splitChannels("green", car);
     part8_g.writeToImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/output/part8_g.tga");
-    passedTests += compareImages(part8_g, EXAMPLE_part8_g);
+    part8PassedTests += compareImages(part8_g, EXAMPLE_part8_g);
     
     Image part8_b = splitChannels("blue", car);
     part8_b.writeToImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/output/part8_b.tga");
-    passedTests += compareImages(part8_b, EXAMPLE_part8_b);
+    part8PassedTests += compareImages(part8_b, EXAMPLE_part8_b);
+
+    if (part8PassedTests == 3) {
+        passedTests++;
+    }
 
     // Part 9: Combine three channels
     cout << "Part 9: Combine Channels" << endl;
