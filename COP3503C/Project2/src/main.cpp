@@ -89,10 +89,22 @@ int main()
     Image tempImage = Multiply(layer1, pattern2);
     
     tempImage.writeToImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/output/tempImage.tga");
-    Image part3 = Screen(text1, tempImage);
+    Image officialTempImage;
+    officialTempImage.loadImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/output/tempImage.tga");
+    Image part3 = Screen(text1, officialTempImage);
     
     part3.writeToImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/output/part3.tga");
     passedTests += compareImages(part3, EXAMPLE_part3);
+
+    // Part 4: Multiply then Subtract
+    cout << "Part 4: Multiply then Subtract" << endl;
+    Image tempImage2 = Multiply(layer2, circles);
+    tempImage2.writeToImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/output/tempImage2.tga");
+    Image officialTempImage2;
+    officialTempImage2.loadImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/output/tempImage2.tga");
+    Image part4 = Subtract(pattern2, officialTempImage2);
+    part4.writeToImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/output/part4.tga");
+    passedTests += compareImages(part4, EXAMPLE_part4);
 
 
     return 0;
