@@ -190,7 +190,7 @@ Image Overlay(Image &firstImage, Image &secondImage) {
   return imageResult;
 }
 
-Image AddGreen(Image &firstImage) {
+Image addGreen(Image &firstImage) {
   Image imageResult;
   vector <Image::Pixel> firstPixels = firstImage.getPixels();
 
@@ -218,7 +218,7 @@ Image AddGreen(Image &firstImage) {
   return imageResult;
 }
 
-Image ScaleRed(Image &firstImage) {
+Image scaleRed(Image &firstImage) {
   Image imageResult;
   
   Image::Header header = firstImage.getHeader();
@@ -244,6 +244,60 @@ Image ScaleRed(Image &firstImage) {
   }
   imageResult.setPixels(resultPixels);
   imageResult.setUnsignedInts();
+
+  return imageResult;
+}
+
+Image splitChannels(string rgb, Image &firstImage) {
+  Image imageResult;
+  vector <Image::Pixel> firstPixels = firstImage.getPixels();
+
+  Image::Header header = firstImage.getHeader();
+  imageResult.setHeader(header);
+
+  vector <Image::Pixel> resultPixels;
+
+  for (unsigned int i = 0; i < firstPixels.size(); i++) {
+    Image::Pixel resultPixel;
+    if (rgb == "red") {
+      resultPixel.red = firstPixels[i].red;
+      resultPixel.green = 0;
+      resultPixel.blue = 0;
+    } else if (rgb == "green") {
+      resultPixel.red = 0;
+      resultPixel.green = firstPixels[i].green;
+      resultPixel.blue = 0;
+    } else if (rgb == "blue") {
+      resultPixel.red = 0;
+      resultPixel.green = 0;
+      resultPixel.blue = firstPixels[i].blue;
+    }
+    resultPixels.push_back(resultPixel);
+  }
+  imageResult.setPixels(resultPixels);
+
+  return imageResult;
+}
+
+Image combineChannels(Image &firstImage, Image &secondImage, Image &thirdImage) {
+  Image imageResult;
+  vector <Image::Pixel> firstPixels = firstImage.getPixels();
+  vector <Image::Pixel> secondPixels = secondImage.getPixels();
+  vector <Image::Pixel> thirdPixels = thirdImage.getPixels();
+
+  Image::Header header = firstImage.getHeader();
+  imageResult.setHeader(header);
+
+  vector <Image::Pixel> resultPixels;
+
+  for (unsigned int i = 0; i < firstPixels.size(); i++) {
+    Image::Pixel resultPixel;
+    resultPixel.red = firstPixels[i].red;
+    resultPixel.green = secondPixels[i].green;
+    resultPixel.blue = thirdPixels[i].blue;
+    resultPixels.push_back(resultPixel);
+  }
+  imageResult.setPixels(resultPixels);
 
   return imageResult;
 }

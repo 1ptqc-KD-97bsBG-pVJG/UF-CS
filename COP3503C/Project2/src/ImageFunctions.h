@@ -25,6 +25,6 @@ Image scaleRed(Image &image);
 
 Image splitChannels(string rgbValue, Image &image);
 
-Image Combine(Image &firstImage, Image &secondImage, Image &thirdImage);
+Image combineChannels(Image &firstImage, Image &secondImage, Image &thirdImage);
 
 Image Rotate(Image &image);
