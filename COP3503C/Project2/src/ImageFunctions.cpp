@@ -16,6 +16,12 @@ unsigned int clamp (int preClampValue) {
   }
 }
 
+float screenFunction(float factor, unsigned int firstPixel, unsigned int secondPixel) {
+  float result = 1.0f - factor * ((1.0f - (((float)(firstPixel) / 255.0f))) * ((1.0f - ((float)(secondPixel) / 255.0f))));
+  return result;
+}
+
+
 // image actions
 
 Image Multiply(Image &firstImage, Image &secondImage) {
@@ -86,6 +92,42 @@ Image Subtract(Image &firstImage, Image &secondImage) {
   return imageResult;
 }
 
+Image Screen(Image &firstImage, Image &secondImage) {
+  Image imageResult;
+
+  Image::Header header = firstImage.getHeader();
+  imageResult.setHeader(header);
+  firstImage.setUnsignedInts();
+  secondImage.setUnsignedInts();
+
+  vector<Image::Pixel> firstPixels = firstImage.getPixels();
+  vector<Image::Pixel> secondPixels = secondImage.getPixels();
+  vector<Image::Pixel> resultPixels;
+
+  for (unsigned int i = 0; i < firstPixels.size(); i++) {
+    Image::Pixel resultPixel;
+    
+    float redPixelFloat = screenFunction(1.0f, firstPixels[i].redInt, secondPixels[i].redInt);
+    unsigned int redPixelInt = (unsigned int)scale(redPixelFloat * 255.0f);
+    unsigned char redPixelChar = firstImage.ConvertIntToChar(redPixelInt);
+    resultPixel.red = redPixelChar;
+
+    float greenPixelFloat = screenFunction(1.0f, firstPixels[i].greenInt, secondPixels[i].greenInt);
+    unsigned int greenPixelInt = (unsigned int)scale(greenPixelFloat * 255.0f);
+    unsigned char greenPixelChar = firstImage.ConvertIntToChar(greenPixelInt);
+    resultPixel.green = greenPixelChar;
+
+    float bluePixelFloat = screenFunction(1.0f, firstPixels[i].blueInt, secondPixels[i].blueInt);
+    unsigned int bluePixelInt = (unsigned int)scale(bluePixelFloat * 255.0f);
+    unsigned char bluePixelChar = firstImage.ConvertIntToChar(bluePixelInt);
+    resultPixel.blue = bluePixelChar;
+
+    resultPixels.push_back(resultPixel);
+  }
+  imageResult.setPixels(resultPixels);
+
+  return imageResult;
+}
 
 Image Rotate(Image &inputImage) {
   Image resultImage;

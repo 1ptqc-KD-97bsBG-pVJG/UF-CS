@@ -83,6 +83,18 @@ int main()
     part2.writeToImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/output/part2.tga");
     passedTests += compareImages(part2, EXAMPLE_part2);
 
+
+    // Part 3: Screen
+    cout << "Part 3: Screen" << endl;
+    Image tempImage = Multiply(layer1, pattern2);
+    
+    tempImage.writeToImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/output/tempImage.tga");
+    Image part3 = Screen(text1, tempImage);
+    
+    part3.writeToImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/output/part3.tga");
+    passedTests += compareImages(part3, EXAMPLE_part3);
+
+
     return 0;
 }
 // 1. Use the Multiply blending mode to combine layer1.tga (top layer) with pattern1.tga (bottom layer).
