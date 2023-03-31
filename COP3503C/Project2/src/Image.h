@@ -38,7 +38,7 @@ class Image {
     void writeToImage(string filename);
 
     unsigned int ConvertCharToInt(unsigned char charValue);
-    unsigned int ConvertIntToChar(unsigned int intValue);
+    unsigned char ConvertIntToChar(unsigned int intValue);
 
     // getters
     Header getHeader();

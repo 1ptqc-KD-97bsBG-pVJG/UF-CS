@@ -17,17 +17,18 @@ unsigned int clamp (int preClampValue) {
   }
 }
 
-float screenFunction(float factor, unsigned int firstPixel, unsigned int secondPixel) {
-  float result = 1.0f - factor * ((1.0f - (((float)(firstPixel) / 255.0f))) * ((1.0f - ((float)(secondPixel) / 255.0f))));
-  return result;
+float screenFunction(float factor, unsigned int A, unsigned int B) {
+    float temp = 1.0f - factor * ((1.0f - (((float)(A) / 255.0f))) * ((1.0f - ((float)(B) / 255.0f))));
+    return temp;
 }
 
 bool backgroundColor(unsigned int color) {
-  if (color < (unsigned int)(127)) {
-    return true;
-  } else {
-    return false;
-  }
+    if (color < (unsigned int)(127)) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 
@@ -138,58 +139,90 @@ Image Screen(Image &firstImage, Image &secondImage) {
   return imageResult;
 }
 
-Image Overlay(Image &firstImage, Image &secondImage) {
-  Image imageResult;
+Image Overlay(Image& A, Image& B) {
 
-  Image::Header header = firstImage.getHeader();
-  imageResult.setHeader(header);
-  firstImage.setUnsignedInts();
-  secondImage.setUnsignedInts();
 
-  vector<Image::Pixel> firstPixels = firstImage.getPixels();
-  vector<Image::Pixel> secondPixels = secondImage.getPixels();
+    // Make postOverlay image object
+    Image postOverlay;
 
-  vector<Image::Pixel> resultPixels;
 
-  for (unsigned int i = 0; i < firstPixels.size(); i++) {
-    Image::Pixel resultPixel;
-    unsigned int redPixelInt;
-    unsigned int greenPixelInt;
-    unsigned int bluePixelInt;
+    // Get header for first image and set that header to the header of the post overlay
+    Image::Header header = A.getHeader();
+    postOverlay.setHeader(header);
 
-    if (backgroundColor(firstPixels[i].redInt)) {
-      redPixelInt = (unsigned int)(2.0f * scale(firstPixels[i].redInt * secondPixels[i].redInt / 255.0f));
-    } else {
-      float redPixelFloat = screenFunction(2.0f, firstPixels[i].redInt, secondPixels[i].redInt);
-      redPixelInt = (unsigned int)scale(redPixelFloat * 255.0f);
+
+    // Set ints of the input images
+    A.setUnsignedInts();
+    B.setUnsignedInts();
+
+
+    // Set input image vectors
+    vector<Image::Pixel> Apixels = A.getPixels();
+    vector<Image::Pixel> Bpixels = B.getPixels();
+
+
+    // Create output post overlay pixel vector
+    vector<Image::Pixel> postOverlayPixels;
+
+
+    // For every pixel, adjust rbg values then amend it to the post screen vector
+    for (unsigned int i = 0; i < Apixels.size(); i++) {
+
+
+        // Make pixel object with respective int values
+        Image::Pixel PostOverlayPixel;
+        unsigned int redInt;
+        unsigned int greenInt;
+        unsigned int blueInt;
+
+
+        // Overlay is a conditional function and therefore will need to be implimented using if/else
+        // Use background function to see what the background image's color is. Based on that adjust red.
+        if (backgroundColor(Apixels[i].redInt)) {
+            redInt = (unsigned int)(2.0f * scale(Apixels[i].redInt * Bpixels[i].redInt / 255.0f));
+        }
+        else {
+            float redFloat = screenFunction(2.0f, Apixels[i].redInt, Bpixels[i].redInt);
+            redInt = (unsigned int)scale(redFloat * 255.0f);
+        }
+        unsigned char red = A.ConvertIntToChar(redInt);
+        PostOverlayPixel.red = red;
+
+
+        // Ditto for green
+        if (backgroundColor(Apixels[i].greenInt)) {
+            greenInt = (unsigned int)(2.0f * scale(Apixels[i].greenInt * Bpixels[i].greenInt / 255.0f));
+        }
+        else {
+            float greenFloat = screenFunction(2.0f, Apixels[i].greenInt, Bpixels[i].greenInt);
+            greenInt = (unsigned int)scale(greenFloat * 255.0f);
+        }
+        unsigned char green = A.ConvertIntToChar(greenInt);
+        PostOverlayPixel.green = green;
+
+
+        // Ditto for blue
+        if (backgroundColor(Apixels[i].blueInt)) {
+            blueInt = (unsigned int)(2.0f * scale(Apixels[i].blueInt * Bpixels[i].blueInt / 255.0f));
+        }
+        else {
+            float blueFloat = screenFunction(2.0f, Apixels[i].blueInt, Bpixels[i].blueInt);
+            blueInt = (unsigned int)scale(blueFloat * 255.0f);
+        }
+        unsigned char blue = A.ConvertIntToChar(blueInt);
+        PostOverlayPixel.blue = blue;
+
+
+        // Add overlayed pixel to the greater pixel vector
+        postOverlayPixels.push_back(PostOverlayPixel);
     }
-    unsigned char red = firstImage.ConvertIntToChar(redPixelInt);
-    resultPixel.red = red;
 
-    if (backgroundColor(firstPixels[i].greenInt)) {
-      greenPixelInt = (unsigned int)(2.0f * scale(firstPixels[i].greenInt * secondPixels[i].greenInt / 255.0f));
-    } else {
-      float greenPixelFloat = screenFunction(2.0f, firstPixels[i].greenInt, secondPixels[i].greenInt);
-      greenPixelInt = (unsigned int)scale(greenPixelFloat * 255.0f);
-    }
-    unsigned char green = firstImage.ConvertIntToChar(greenPixelInt);
-    resultPixel.green = green;
 
-    if (backgroundColor(firstPixels[i].blueInt)) {
-      bluePixelInt = (unsigned int)(2.0f * scale(firstPixels[i].blueInt * secondPixels[i].blueInt / 255.0f));
-    } else {
-      float bluePixelFloat = screenFunction(2.0f, firstPixels[i].blueInt, secondPixels[i].blueInt);
-      bluePixelInt = (unsigned int)scale(bluePixelFloat * 255.0f);
-    }
-    unsigned char blue = firstImage.ConvertIntToChar(bluePixelInt);
-    resultPixel.blue = blue;
-
-    resultPixels.push_back(resultPixel);
-  }
-  imageResult.setPixels(resultPixels);
-
-  return imageResult;
+    postOverlay.setPixels(postOverlayPixels);
+    return postOverlay;
 }
+
+
 
 Image addGreen(Image &firstImage) {
   Image imageResult;

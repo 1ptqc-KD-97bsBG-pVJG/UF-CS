@@ -82,10 +82,10 @@ unsigned int Image::ConvertCharToInt(unsigned char charValue) {
 
 }
 
-unsigned int Image::ConvertIntToChar(unsigned int intValue) {
-  // Converts unsigned int to unsigned char by adding null terminator and type casting
-  unsigned char charValue = (unsigned char)(intValue + '\0');
-  return charValue;
+
+
+unsigned char Image::ConvertIntToChar(unsigned int integer) {
+    return (unsigned char)(integer);
 }
 
 
