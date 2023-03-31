@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
 
     // FIXME: always works
     try {
-        trackingImage.loadImage("./" + firstImageFile);
+        trackingImage.loadImage("./inputs/" + firstImageFile);
     }
     catch (const std::runtime_error& e) {
         std::cerr << "Invalid argument, file does not exist." << std::endl;
@@ -63,7 +63,7 @@ int main(int argc, char* argv[]) {
             }
             Image secondImage;
             try {
-                secondImage.loadImage("./" + secondImageFile);
+                secondImage.loadImage("./inputs/" + secondImageFile);
             }
             catch (const std::runtime_error& e) {
                 std::cerr << "Invalid argument, file does not exist." << std::endl;
@@ -96,7 +96,7 @@ int main(int argc, char* argv[]) {
             std::string greenLayerFile = argv[i];
             Image greenLayer;
             try {
-                greenLayer.loadImage("./" + greenLayerFile);
+                greenLayer.loadImage("./inputs/" + greenLayerFile);
             }
             catch (const std::runtime_error& e) {
                 std::cerr << "Invalid argument, file does not exist." << std::endl;
@@ -112,7 +112,7 @@ int main(int argc, char* argv[]) {
             std::string blueLayerFile = argv[i];
             Image blueLayer;
             try {
-                blueLayer.loadImage("./" + blueLayerFile);
+                blueLayer.loadImage("./inputs/" + blueLayerFile);
             }
             catch (const std::runtime_error& e) {
                 std::cerr << "Invalid argument, file does not exist." << std::endl;
@@ -149,7 +149,7 @@ int main(int argc, char* argv[]) {
     }
 
     try {
-        trackingImage.writeToImage("./" + outputFile);
+        trackingImage.writeToImage("./output/" + outputFile);
         // temporary
         cout << "Successfully output to " << outputFile << endl;
     }
