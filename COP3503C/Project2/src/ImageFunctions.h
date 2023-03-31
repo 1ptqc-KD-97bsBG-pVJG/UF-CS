@@ -19,9 +19,9 @@ Image Screen(Image &firstImage, Image &secondImage);
 
 Image Overlay(Image &firstImage, Image &secondImage);
 
-Image addGreen(Image &image);
+Image addGreen(Image &image, unsigned int amount = 200);
 
-Image scaleRed(Image &image);
+Image scaleRed(Image &image, unsigned int amount = 200);
 
 Image splitChannels(string rgbValue, Image &image);
 

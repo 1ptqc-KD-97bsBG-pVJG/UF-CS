@@ -9,6 +9,15 @@ void printHelp() {
     std::cout << "Usage:" << std::endl;
     std::cout << "  ./project2.out [output] [firstImage] [method] [...]" << std::endl;
 }
+void printHelp() {
+    std::cout << "Project 2: Image Processing, Spring 2023" << std::endl;
+    std::cout << "Usage:" << std::endl;
+    std::cout << "  ./project2.out [output] [firstImage] [method] [...]" << std::endl;
+}
+
+bool isNumber(const std::string& s) {
+    return !s.empty() && std::find_if(s.begin(), s.end(), [](unsigned char c) { return !std::isdigit(c); }) == s.end();
+}
 
 int main(int argc, char* argv[]) {
     cout << "argc: " << argc << endl;
@@ -102,22 +111,22 @@ int main(int argc, char* argv[]) {
 
 // CLI explanation:
 // You will need to implement several methods in your CLI that the user can call. The methods are discussed below.
-// • multiply: This method takes one additional argument, the second image to use in the multipli- cation process, alongside your tracking image.
-// • subtract: This method takes one additional argument, the second image to use in the subtract algorithm, alongside your tracking image. The first image, the tracking image, will be the top layer. The additional image argument constitutes the bottom layer.
-// • overlay: This method takes one additional argument, the second image to use in the overlay algorithm, alongside your tracking image. The first image, the tracking image, will be the top layer. The additional image argument constitutes the bottom layer.
-// • screen: This method takes one additional argument, the second image to use in the screen algorithm, alongside your tracking image. The first image, the tracking image, will be the bottom layer. The additional image argument constitutes the top layer.
-// • combine: This method is similar to what you did in task 9 of Part 2, where three individual files each provide one channel of the resulting image. This method takes two additional arguments, the source for the green layer (the first additional argument), and the source for the blue layer (the second additional argument). The source for the red layer is the tracking image.
-// • flip: This method takes no additional argument, and simply flips the tracking image.
-// • onlyred: This method takes no additional arguments, and simply retrieves the red channel from
+// ï¿½ multiply: This method takes one additional argument, the second image to use in the multipli- cation process, alongside your tracking image.
+// ï¿½ subtract: This method takes one additional argument, the second image to use in the subtract algorithm, alongside your tracking image. The first image, the tracking image, will be the top layer. The additional image argument constitutes the bottom layer.
+// ï¿½ overlay: This method takes one additional argument, the second image to use in the overlay algorithm, alongside your tracking image. The first image, the tracking image, will be the top layer. The additional image argument constitutes the bottom layer.
+// ï¿½ screen: This method takes one additional argument, the second image to use in the screen algorithm, alongside your tracking image. The first image, the tracking image, will be the bottom layer. The additional image argument constitutes the top layer.
+// ï¿½ combine: This method is similar to what you did in task 9 of Part 2, where three individual files each provide one channel of the resulting image. This method takes two additional arguments, the source for the green layer (the first additional argument), and the source for the blue layer (the second additional argument). The source for the red layer is the tracking image.
+// ï¿½ flip: This method takes no additional argument, and simply flips the tracking image.
+// ï¿½ onlyred: This method takes no additional arguments, and simply retrieves the red channel from
 // the image, similar to how you did in task 8.
-// • onlygreen: This method takes no additional arguments, and simply retrieves the green channel from the image, similar to how you did in task 8.
-// • onlyblue: This method takes no additional arguments, and simply retrieves the blue channel from the image, similar to how you did in task 8.
-// • addred: This method adds a certain value to the red channel of an image. This method takes one additional argument, the amount to add to the red channel. This will need to be converted to an integer.
-// • addgreen: This method adds a certain value to the green channel of an image. This method takes one additional argument, the amount to add to the red channel. This will need to be converted to an integer.
-// • addblue: This method adds a certain value to the blue channel of an image. This method takes one additional argument, the amount to add to the red channel. This will need to be converted to an integer.
-// • scalered: This method scales the red channel of an image. This method takes one additional argument, the amount to scale the red channel. This will need to be converted to an integer.
-// • scalegreen: This method scales the green channel of an image. This method takes one additional argument, the amount to scale the red channel. This will need to be converted to an integer.
-// • scaleblue: This method scales the blue channel of an image. This method takes one additional argument, the amount to scale the red channel. This will need to be converted to an integer.
+// ï¿½ onlygreen: This method takes no additional arguments, and simply retrieves the green channel from the image, similar to how you did in task 8.
+// ï¿½ onlyblue: This method takes no additional arguments, and simply retrieves the blue channel from the image, similar to how you did in task 8.
+// ï¿½ addred: This method adds a certain value to the red channel of an image. This method takes one additional argument, the amount to add to the red channel. This will need to be converted to an integer.
+// ï¿½ addgreen: This method adds a certain value to the green channel of an image. This method takes one additional argument, the amount to add to the red channel. This will need to be converted to an integer.
+// ï¿½ addblue: This method adds a certain value to the blue channel of an image. This method takes one additional argument, the amount to add to the red channel. This will need to be converted to an integer.
+// ï¿½ scalered: This method scales the red channel of an image. This method takes one additional argument, the amount to scale the red channel. This will need to be converted to an integer.
+// ï¿½ scalegreen: This method scales the green channel of an image. This method takes one additional argument, the amount to scale the red channel. This will need to be converted to an integer.
+// ï¿½ scaleblue: This method scales the blue channel of an image. This method takes one additional argument, the amount to scale the red channel. This will need to be converted to an integer.
 
 // example CLI usage:
 // bash-5.2$ ./project2.out --help
