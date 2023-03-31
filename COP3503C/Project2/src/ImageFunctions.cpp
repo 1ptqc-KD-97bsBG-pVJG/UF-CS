@@ -3,7 +3,7 @@
 using namespace std;
 
 float scale(float value) {
-  return value += 0.5;
+  return value += 0.5f;
 }
 
 unsigned int clamp (int preClampValue) {
