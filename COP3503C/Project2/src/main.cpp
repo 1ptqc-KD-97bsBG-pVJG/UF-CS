@@ -10,14 +10,21 @@ void printHelp() {
     std::cout << "  ./project2.out [output] [firstImage] [method] [...]" << std::endl;
 }
 
-bool isNumber(const std::string& s) {
-    return !s.empty() && std::find_if(s.begin(), s.end(), [](unsigned char c) { return !std::isdigit(c); }) == s.end();
-}
+// bool isNumber(const std::string& s) {
+//     return !s.empty() && std::find_if(s.begin(), s.end(), [](unsigned char c) { return !std::isdigit(c); }) == s.end();
+// }
 
 int main(int argc, char* argv[]) {
     if (argc == 1 || (argc == 2 && std::string(argv[1]) == "--help")) {
         printHelp();
         return 0;
+    }
+
+    cout << "argc: " << argc << endl;
+    if (argc > 1) {
+        for (int i = 0; i < argc; i++) {
+            cout << "argv[" << i << "]: " << argv[i] << endl;
+        }
     }
 
     std::string outputFile = argv[1];
@@ -63,7 +70,7 @@ int main(int argc, char* argv[]) {
             }
 
             if (method == "multiply") {
-                Multiply(trackingImage, secondImage);
+                trackingImage = Multiply(trackingImage, secondImage);
             }
             else if (method == "subtract") {
                 Subtract(trackingImage, secondImage);
@@ -104,11 +111,11 @@ int main(int argc, char* argv[]) {
                 std::cerr << "Missing argument." << std::endl;
                 return 1;
             }
-            std::string valueStr = argv[i];
-            if (!isNumber(valueStr)) {
-                std::cerr << "Invalid argument, expected number." << std::endl;
-                return 1;
-            }
+            // std::string valueStr = argv[i];
+            // if (!isNumber(valueStr)) {
+            //     std::cerr << "Invalid argument, expected number." << std::endl;
+            //     return 1;
+            // }
             // add and scale functions
         }
         else {
@@ -118,7 +125,9 @@ int main(int argc, char* argv[]) {
     }
 
     try {
-        trackingImage.writeToImage(outputFile);
+        trackingImage.writeToImage("./" + outputFile);
+        // temporary
+        cout << "Successfully output to " << outputFile << endl;
     }
     catch (int error) {
         std::cerr << "Failed to save output file." << std::endl;
