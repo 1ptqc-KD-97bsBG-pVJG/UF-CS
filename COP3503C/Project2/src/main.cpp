@@ -53,7 +53,9 @@ int main()
     Image EXAMPLE_part5;
     Image EXAMPLE_part6;
     Image EXAMPLE_part7;
-    Image EXAMPLE_part8;
+    Image EXAMPLE_part8_r;
+    Image EXAMPLE_part8_g;
+    Image EXAMPLE_part8_b;
     Image EXAMPLE_part9;
     Image EXAMPLE_part10;
 
@@ -65,7 +67,9 @@ int main()
     EXAMPLE_part5.loadImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/examples/EXAMPLE_part5.tga");
     EXAMPLE_part6.loadImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/examples/EXAMPLE_part6.tga");
     EXAMPLE_part7.loadImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/examples/EXAMPLE_part7.tga");
-    EXAMPLE_part8.loadImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/examples/EXAMPLE_part8.tga");
+    EXAMPLE_part8_r.loadImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/examples/EXAMPLE_part8_r.tga");
+    EXAMPLE_part8_g.loadImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/examples/EXAMPLE_part8_g.tga");
+    EXAMPLE_part8_b.loadImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/examples/EXAMPLE_part8_b.tga");
     EXAMPLE_part9.loadImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/examples/EXAMPLE_part9.tga");
     EXAMPLE_part10.loadImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/examples/EXAMPLE_part10.tga");
 
@@ -128,13 +132,15 @@ int main()
     cout << "Part 8: Split Into Channels" << endl;
     Image part8 = splitChannels("red", car);
     part8.writeToImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/output/part8_r.tga");
-    passedTests += compareImages(part8, EXAMPLE_part8);
+    passedTests += compareImages(part8, EXAMPLE_part8_r);
+    
     Image part8_g = splitChannels("green", car);
     part8_g.writeToImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/output/part8_g.tga");
-    passedTests += compareImages(part8_g, EXAMPLE_part8);
+    passedTests += compareImages(part8_g, EXAMPLE_part8_g);
+    
     Image part8_b = splitChannels("blue", car);
     part8_b.writeToImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/output/part8_b.tga");
-    passedTests += compareImages(part8_b, EXAMPLE_part8);
+    passedTests += compareImages(part8_b, EXAMPLE_part8_b);
 
     // Part 9: Combine three channels
     cout << "Part 9: Combine Channels" << endl;
@@ -144,7 +150,7 @@ int main()
 
     // Part 10: Rotate
     cout << "Part 10: Rotate" << endl;
-    Image part10 = Rotate(car);
+    Image part10 = Rotate(text2);
     part10 = Rotate(part10);
     part10.writeToImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/output/part10.tga");
     passedTests += compareImages(part10, EXAMPLE_part10);
