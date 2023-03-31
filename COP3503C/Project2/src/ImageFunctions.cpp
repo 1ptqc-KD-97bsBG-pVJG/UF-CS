@@ -261,15 +261,15 @@ Image splitChannels(string rgb, Image &firstImage) {
     Image::Pixel resultPixel;
     if (rgb == "red") {
       resultPixel.red = firstPixels[i].red;
-      resultPixel.green = 0;
-      resultPixel.blue = 0;
+      resultPixel.green = firstPixels[i].red;
+      resultPixel.blue = firstPixels[i].red;
     } else if (rgb == "green") {
-      resultPixel.red = 0;
+      resultPixel.red = firstPixels[i].green;
       resultPixel.green = firstPixels[i].green;
-      resultPixel.blue = 0;
+      resultPixel.blue = firstPixels[i].green;
     } else if (rgb == "blue") {
-      resultPixel.red = 0;
-      resultPixel.green = 0;
+      resultPixel.red = firstPixels[i].blue;
+      resultPixel.green = firstPixels[i].blue;
       resultPixel.blue = firstPixels[i].blue;
     }
     resultPixels.push_back(resultPixel);
