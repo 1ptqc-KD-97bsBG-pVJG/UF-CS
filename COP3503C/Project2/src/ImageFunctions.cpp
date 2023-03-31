@@ -137,7 +137,7 @@ Image Screen(Image &firstImage, Image &secondImage) {
   return imageResult;
 }
 
-Image Overlay(Image &firstImage, Image secondImage) {
+Image Overlay(Image &firstImage, Image &secondImage) {
   Image imageResult;
 
   Image::Header header = firstImage.getHeader();
@@ -186,6 +186,64 @@ Image Overlay(Image &firstImage, Image secondImage) {
     resultPixels.push_back(resultPixel);
   }
   imageResult.setPixels(resultPixels);
+
+  return imageResult;
+}
+
+Image AddGreen(Image &firstImage) {
+  Image imageResult;
+  vector <Image::Pixel> firstPixels = firstImage.getPixels();
+
+  Image::Header header = firstImage.getHeader();
+  imageResult.setHeader(header);
+
+  vector <Image::Pixel> resultPixels;
+
+  int greenValue;
+  for (unsigned int i = 0; i < firstPixels.size(); i++) {
+    Image::Pixel resultPixel;
+    
+    
+    greenValue = firstPixels[i].greenInt + 200;
+    unsigned int greenInt = clamp(greenValue);
+    unsigned char greenChar = firstImage.ConvertIntToChar(greenInt);
+    resultPixel.green = greenChar;
+
+    resultPixel.red = firstPixels[i].red;
+    resultPixel.blue = firstPixels[i].blue;
+    resultPixels.push_back(resultPixel);
+  }
+  imageResult.setPixels(resultPixels);
+
+  return imageResult;
+}
+
+Image ScaleRed(Image &firstImage) {
+  Image imageResult;
+  
+  Image::Header header = firstImage.getHeader();
+  imageResult.setHeader(header);
+
+  vector <Image::Pixel> firstPixels = firstImage.getPixels();
+  vector <Image::Pixel> resultPixels;
+
+  for (unsigned int i = 0; i < firstPixels.size(); i++) {
+    Image::Pixel resultPixel;
+
+    unsigned int redInt;
+    float redFloat = ((float)firstPixels[i].redInt / 255.0f) * 4.0f;
+    redInt = (unsigned int)scale(redFloat * 255.0f);
+    redInt = clamp(redInt);
+    unsigned char redChar = firstImage.ConvertIntToChar(redInt);
+    resultPixel.red = redChar;
+
+    resultPixel.green = firstPixels[i].green;
+
+    resultPixel.blue = 0;
+    resultPixels.push_back(resultPixel);
+  }
+  imageResult.setPixels(resultPixels);
+  imageResult.setUnsignedInts();
 
   return imageResult;
 }

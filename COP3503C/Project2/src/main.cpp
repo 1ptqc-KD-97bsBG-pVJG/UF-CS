@@ -112,6 +112,21 @@ int main()
     part5.writeToImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/output/part5.tga");
     passedTests += compareImages(part5, EXAMPLE_part5);
 
+    // Part 6: Add Green
+    cout << "Part 6: Add Green" << endl;
+    Image part6 = addGreen(car);
+    part6.writeToImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/output/part6.tga");
+    passedTests += compareImages(part6, EXAMPLE_part6);
+
+    // Part 7: Scale Red & Blue
+    cout << "Part 7: Scale Red & Blue" << endl;
+    Image part7 = scaleRed(car);
+    part7.writeToImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/output/part7.tga");
+    passedTests += compareImages(part7, EXAMPLE_part7);
+
+
+
+
     return 0;
 }
 // 1. Use the Multiply blending mode to combine layer1.tga (top layer) with pattern1.tga (bottom layer).
