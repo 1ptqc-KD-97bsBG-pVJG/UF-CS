@@ -37,10 +37,11 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
+    // FIXME: always works
     try {
         trackingImage.loadImage("./" + firstImageFile);
     }
-    catch (int error) {
+    catch (const std::runtime_error& e) {
         std::cerr << "Invalid argument, file does not exist." << std::endl;
         return 1;
     }
@@ -64,24 +65,27 @@ int main(int argc, char* argv[]) {
             try {
                 secondImage.loadImage("./" + secondImageFile);
             }
-            catch (int error) {
+            catch (const std::runtime_error& e) {
                 std::cerr << "Invalid argument, file does not exist." << std::endl;
                 return 1;
             }
+
+            // LOOKS GOOD
 
             if (method == "multiply") {
                 trackingImage = Multiply(trackingImage, secondImage);
             }
             else if (method == "subtract") {
-                Subtract(trackingImage, secondImage);
+                trackingImage = Subtract(trackingImage, secondImage);
             }
             else if (method == "overlay") {
-                Overlay(trackingImage, secondImage);
+                trackingImage = Overlay(trackingImage, secondImage);
             }
             else if (method == "screen") {
-                Screen(trackingImage, secondImage);
+                trackingImage = Screen(trackingImage, secondImage);
             }
         }
+        // LOOKS GOOD
         else if (method == "combine") {
             // Implement the combine method
             i++;
@@ -90,17 +94,37 @@ int main(int argc, char* argv[]) {
                 return 1;
             }
             std::string greenLayerFile = argv[i];
+            Image greenLayer;
+            try {
+                greenLayer.loadImage("./" + greenLayerFile);
+            }
+            catch (const std::runtime_error& e) {
+                std::cerr << "Invalid argument, file does not exist." << std::endl;
+                return 1;
+            }
+            
             i++;
             if (i >= argc) {
                 std::cerr << "Missing argument." << std::endl;
                 return 1;
             }
+            
             std::string blueLayerFile = argv[i];
-            // Combine(trackingImage, greenLayerFile, blueLayerFile);
+            Image blueLayer;
+            try {
+                blueLayer.loadImage("./" + blueLayerFile);
+            }
+            catch (const std::runtime_error& e) {
+                std::cerr << "Invalid argument, file does not exist." << std::endl;
+                return 1;
+            }
+
+            trackingImage = combineChannels(trackingImage, greenLayer, blueLayer);
         }
+        // LOOKS GOOD
         else if (method == "flip") {
-            Rotate(trackingImage);
-            Rotate(trackingImage);
+            trackingImage = Rotate(trackingImage);
+            trackingImage = Rotate(trackingImage);
         }
         else if (method == "onlyred" || method == "onlygreen" || method == "onlyblue") {
             // scale functions
@@ -129,7 +153,7 @@ int main(int argc, char* argv[]) {
         // temporary
         cout << "Successfully output to " << outputFile << endl;
     }
-    catch (int error) {
+    catch (const std::runtime_error& e) {
         std::cerr << "Failed to save output file." << std::endl;
         return 1;
     }

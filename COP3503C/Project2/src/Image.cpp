@@ -1,11 +1,16 @@
 #include "Image.h"
 #include <fstream>
+#include <stdexcept>
 using namespace std;
 
 
 void Image::loadImage(string filename) {
   // open file
   ifstream File(filename, ios::binary);
+
+    if (!File.is_open()) {
+      throw std::runtime_error("File does not exist.");
+    }
 
   // read header
   File.read(&header.idLength, sizeof(header.idLength));
