@@ -220,34 +220,36 @@ Image addGreen(Image &firstImage) {
 }
 
 Image scaleRed(Image &firstImage) {
-  Image imageResult;
-  
-  Image::Header header = firstImage.getHeader();
-  imageResult.setHeader(header);
+    Image imageResult;
 
-  vector <Image::Pixel> firstPixels = firstImage.getPixels();
-  vector <Image::Pixel> resultPixels;
+    Image::Header header = firstImage.getHeader();
+    imageResult.setHeader(header);
+    firstImage.setUnsignedInts();
 
-  for (unsigned int i = 0; i < firstPixels.size(); i++) {
-    Image::Pixel resultPixel;
+    vector<Image::Pixel> firstPixels = firstImage.getPixels();
+    vector<Image::Pixel> resultPixels;
 
-    unsigned int redInt;
-    float redFloat = ((float)firstPixels[i].redInt / 255.0f) * 4.0f;
-    redInt = (unsigned int)scale(redFloat * 255.0f);
-    redInt = clamp(redInt);
-    unsigned char redChar = firstImage.ConvertIntToChar(redInt);
-    resultPixel.red = redChar;
+    for (unsigned int i = 0; i < firstPixels.size(); i++) {
+        Image::Pixel resultPixel;
 
-    resultPixel.green = firstPixels[i].green;
+        unsigned int redPixelInt = (unsigned int)(scale(firstPixels[i].redInt));
+        float redFloat = ((float)redPixelInt / 255.0f) * 4.0f;
+        redPixelInt = (unsigned int)scale(redFloat * 255.0f);
+        redPixelInt = clamp(redPixelInt);
+        unsigned char redChar = firstImage.ConvertIntToChar(redPixelInt);
+        resultPixel.red = redChar;
 
-    // remove all blue
-    resultPixel.blue = 0;
-    resultPixels.push_back(resultPixel);
-  }
-  imageResult.setPixels(resultPixels);
-  imageResult.setUnsignedInts();
+        unsigned int greenPixelInt = (unsigned int)(scale(firstPixels[i].greenInt));
+        unsigned char greenPixelChar = firstImage.ConvertIntToChar(greenPixelInt);
+        resultPixel.green = greenPixelChar;
+        
+        resultPixel.blue = 0;
 
-  return imageResult;
+        resultPixels.push_back(resultPixel);
+    }
+    imageResult.setPixels(resultPixels);
+
+    return imageResult;
 }
 
 Image splitChannels(string rgb, Image &firstImage) {
