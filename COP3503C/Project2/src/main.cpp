@@ -106,6 +106,11 @@ int main()
     part4.writeToImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/output/part4.tga");
     passedTests += compareImages(part4, EXAMPLE_part4);
 
+    // Part 5: Overlay
+    cout << "Part 5: Overlay" << endl;
+    Image part5 = Overlay(pattern1, layer1);
+    part5.writeToImage("C:/Users/dylan/Desktop/temporary downloads/project 2 temp/output/part5.tga");
+    passedTests += compareImages(part5, EXAMPLE_part5);
 
     return 0;
 }

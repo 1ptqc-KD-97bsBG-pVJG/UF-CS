@@ -21,6 +21,14 @@ float screenFunction(float factor, unsigned int firstPixel, unsigned int secondP
   return result;
 }
 
+bool backgroundColor(unsigned int color) {
+  if (color < (unsigned int)(127)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 
 // image actions
 
@@ -121,6 +129,59 @@ Image Screen(Image &firstImage, Image &secondImage) {
     unsigned int bluePixelInt = (unsigned int)scale(bluePixelFloat * 255.0f);
     unsigned char bluePixelChar = firstImage.ConvertIntToChar(bluePixelInt);
     resultPixel.blue = bluePixelChar;
+
+    resultPixels.push_back(resultPixel);
+  }
+  imageResult.setPixels(resultPixels);
+
+  return imageResult;
+}
+
+Image Overlay(Image &firstImage, Image secondImage) {
+  Image imageResult;
+
+  Image::Header header = firstImage.getHeader();
+  imageResult.setHeader(header);
+  firstImage.setUnsignedInts();
+  secondImage.setUnsignedInts();
+
+  vector<Image::Pixel> firstPixels = firstImage.getPixels();
+  vector<Image::Pixel> secondPixels = secondImage.getPixels();
+
+  vector<Image::Pixel> resultPixels;
+
+  for (unsigned int i = 0; i < firstPixels.size(); i++) {
+    Image::Pixel resultPixel;
+    unsigned int redPixelInt;
+    unsigned int greenPixelInt;
+    unsigned int bluePixelInt;
+
+    if (backgroundColor(firstPixels[i].redInt)) {
+      redPixelInt = (unsigned int)(2.0f * scale(firstPixels[i].redInt * secondPixels[i].redInt / 255.0f));
+    } else {
+      float redPixelFloat = screenFunction(2.0f, firstPixels[i].redInt, secondPixels[i].redInt);
+      redPixelInt = (unsigned int)scale(redPixelFloat * 255.0f);
+    }
+    unsigned char red = firstImage.ConvertIntToChar(redPixelInt);
+    resultPixel.red = red;
+
+    if (backgroundColor(firstPixels[i].greenInt)) {
+      greenPixelInt = (unsigned int)(2.0f * scale(firstPixels[i].greenInt * secondPixels[i].greenInt / 255.0f));
+    } else {
+      float greenPixelFloat = screenFunction(2.0f, firstPixels[i].greenInt, secondPixels[i].greenInt);
+      greenPixelInt = (unsigned int)scale(greenPixelFloat * 255.0f);
+    }
+    unsigned char green = firstImage.ConvertIntToChar(greenPixelInt);
+    resultPixel.green = green;
+
+    if (backgroundColor(firstPixels[i].blueInt)) {
+      bluePixelInt = (unsigned int)(2.0f * scale(firstPixels[i].blueInt * secondPixels[i].blueInt / 255.0f));
+    } else {
+      float bluePixelFloat = screenFunction(2.0f, firstPixels[i].blueInt, secondPixels[i].blueInt);
+      bluePixelInt = (unsigned int)scale(bluePixelFloat * 255.0f);
+    }
+    unsigned char blue = firstImage.ConvertIntToChar(bluePixelInt);
+    resultPixel.blue = blue;
 
     resultPixels.push_back(resultPixel);
   }
