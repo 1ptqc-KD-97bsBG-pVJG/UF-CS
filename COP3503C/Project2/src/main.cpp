@@ -5,9 +5,10 @@
 #include <string>
 
 void printHelp() {
-    std::cout << "Project 2: Image Processing, Spring 2023" << std::endl;
-    std::cout << "Usage:" << std::endl;
-    std::cout << "\t./project2.out [output] [firstImage] [method] [...]" << std::endl;
+    cout << "Project 2: Image Processing, Spring 2023" << endl;
+    cout << endl;
+    cout << "Usage:" << endl;
+    cout << "\t./project2.out [output] [firstImage] [method] [...]" << endl;
 }
 
 int main(int argc, char* argv[]) {
@@ -16,28 +17,21 @@ int main(int argc, char* argv[]) {
         return 0;
     }
 
-    cout << "argc: " << argc << endl;
-    if (argc > 1) {
-        for (int i = 0; i < argc; i++) {
-            cout << "argv[" << i << "]: " << argv[i] << endl;
-        }
-    }
-
     std::string outputFile = argv[1];
     std::string firstImageFile = argv[2];
 
     Image trackingImage;
 
     if (firstImageFile.find(".tga") == std::string::npos) {
-        std::cerr << "Invalid argument, invalid file name." << std::endl;
+        std::cerr << "Invalid file name." << std::endl;
         return 1;
     }
 
     try {
-        trackingImage.loadImage("./inputs/" + firstImageFile);
+        trackingImage.loadImage("./" + firstImageFile);
     }
     catch (const std::runtime_error& e) {
-        std::cerr << "Invalid argument, file does not exist." << std::endl;
+        std::cerr << "File does not exist." << std::endl;
         return 1;
     }
 
@@ -58,7 +52,7 @@ int main(int argc, char* argv[]) {
             }
             Image secondImage;
             try {
-                secondImage.loadImage("./inputs/" + secondImageFile);
+                secondImage.loadImage("./" + secondImageFile);
             }
             catch (const std::runtime_error& e) {
                 std::cerr << "Invalid argument, file does not exist." << std::endl;
@@ -90,8 +84,13 @@ int main(int argc, char* argv[]) {
             }
             std::string greenLayerFile = argv[i];
             Image greenLayer;
+            if (greenLayerFile.find(".tga") == std::string::npos) {
+                std::cerr << "Invalid argument, invalid file name." << std::endl;
+                return 1;
+            }
+
             try {
-                greenLayer.loadImage("./inputs/" + greenLayerFile);
+                greenLayer.loadImage("./" + greenLayerFile);
             }
             catch (const std::runtime_error& e) {
                 std::cerr << "Invalid argument, file does not exist." << std::endl;
@@ -106,8 +105,13 @@ int main(int argc, char* argv[]) {
             
             std::string blueLayerFile = argv[i];
             Image blueLayer;
+            if (blueLayerFile.find(".tga") == std::string::npos) {
+                std::cerr << "Invalid argument, invalid file name." << std::endl;
+                return 1;
+            }
+
             try {
-                blueLayer.loadImage("./inputs/" + blueLayerFile);
+                blueLayer.loadImage("./" + blueLayerFile);
             }
             catch (const std::runtime_error& e) {
                 std::cerr << "Invalid argument, file does not exist." << std::endl;
@@ -190,7 +194,7 @@ int main(int argc, char* argv[]) {
     }
 
     try {
-        trackingImage.writeToImage("./output/" + outputFile);
+        trackingImage.writeToImage("./" + outputFile);
     }
     catch (const std::runtime_error& e) {
         std::cerr << "Failed to save output file." << std::endl;
