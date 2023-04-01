@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
         std::cerr << "Invalid file name." << std::endl;
         return 1;
     }
-    
+
     std::string firstImageFile = argv[2];
 
     if (firstImageFile.find(".tga") == std::string::npos) {
@@ -128,7 +128,6 @@ int main(int argc, char* argv[]) {
         }
         // LOOKS GOOD
         else if (method == "flip") {
-            trackingImage = Rotate(trackingImage);
             trackingImage = Rotate(trackingImage);
         }
         else if (method == "onlyred" || method == "onlygreen" || method == "onlyblue") {
