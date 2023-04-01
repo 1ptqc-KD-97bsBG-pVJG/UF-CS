@@ -437,26 +437,30 @@ Image combineChannels(Image& firstImage, Image& secondImage, Image& thirdImage) 
 }
 
 Image Rotate(Image& inputImage) {
-  Image resultImage;
+    Image resultImage;
 
-  Image::Header header = inputImage.getHeader();
-  resultImage.setHeader(header);
+    Image::Header header = inputImage.getHeader();
+    resultImage.setHeader(header);
 
-  vector<Image::Pixel> inputPixels = inputImage.getPixels();
+    vector<Image::Pixel> inputPixels = inputImage.getPixels();
 
-  vector<Image::Pixel> resultPixels;
+    vector<Image::Pixel> resultPixels;
 
-  // rotate the input image 90 degrees clockwise and store the result in resultImage
-  // FIXME: probably need to switch to 180 degrees instead, dependent on GradeScope
-  for (unsigned int i = inputPixels.size(); i > 0; i--) {
-      Image::Pixel resultPixel;
-      resultPixel.red = inputPixels[i].red;
-      resultPixel.green = inputPixels[i].green;
-      resultPixel.blue = inputPixels[i].blue;
-      resultPixels.push_back(resultPixel);
-  }
+    // Fix the off-by-one error by starting with i = inputPixels.size() - 1
+    for (unsigned int i = inputPixels.size() - 1; ; i--) {
+        Image::Pixel resultPixel;
+        resultPixel.red = inputPixels[i].red;
+        resultPixel.green = inputPixels[i].green;
+        resultPixel.blue = inputPixels[i].blue;
+        resultPixels.push_back(resultPixel);
 
-  resultImage.setPixels(resultPixels);
+        // Stop the loop when i becomes 0
+        if (i == 0) {
+            break;
+        }
+    }
 
-  return resultImage;
+    resultImage.setPixels(resultPixels);
+
+    return resultImage;
 }
