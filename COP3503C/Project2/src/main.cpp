@@ -7,12 +7,8 @@
 void printHelp() {
     std::cout << "Project 2: Image Processing, Spring 2023" << std::endl;
     std::cout << "Usage:" << std::endl;
-    std::cout << "  ./project2.out [output] [firstImage] [method] [...]" << std::endl;
+    std::cout << "\t./project2.out [output] [firstImage] [method] [...]" << std::endl;
 }
-
-// bool isNumber(const std::string& s) {
-//     return !s.empty() && std::find_if(s.begin(), s.end(), [](unsigned char c) { return !std::isdigit(c); }) == s.end();
-// }
 
 int main(int argc, char* argv[]) {
     if (argc == 1 || (argc == 2 && std::string(argv[1]) == "--help")) {
@@ -126,20 +122,66 @@ int main(int argc, char* argv[]) {
             trackingImage = Rotate(trackingImage);
         }
         else if (method == "onlyred" || method == "onlygreen" || method == "onlyblue") {
-            // scale functions
+            if (method == "onlyred") {
+                trackingImage = splitChannels("red", trackingImage);
+            }
+            else if (method == "onlygreen") {
+                trackingImage = splitChannels("green", trackingImage);
+            }
+            else if (method == "onlyblue") {
+                trackingImage = splitChannels("blue", trackingImage);
+            }
         }
-        else if (method == "addred" || method == "addgreen" || method == "addblue" || method == "scalered" || method == "scalegreen" || method == "scaleblue") {
+        else if (method == "addred" || method == "addgreen" || method == "addblue") {
             i++;
             if (i >= argc) {
                 std::cerr << "Missing argument." << std::endl;
                 return 1;
             }
-            // std::string valueStr = argv[i];
-            // if (!isNumber(valueStr)) {
-            //     std::cerr << "Invalid argument, expected number." << std::endl;
-            //     return 1;
-            // }
-            // add and scale functions
+
+            try {
+                std::stoi(argv[i]);
+            }
+            catch (const std::invalid_argument& e) {
+                std::cerr << "Invalid argument, expected number." << std::endl;
+                return 1;
+            }
+
+            if (method == "addred") {
+                trackingImage = addRed(trackingImage, std::stoi(argv[i]));
+            }
+            else if (method == "addgreen") {
+                trackingImage = addGreen(trackingImage, std::stoi(argv[i]));
+            }
+            else if (method == "addblue") {
+                trackingImage = addBlue(trackingImage, std::stoi(argv[i]));
+            }
+        }
+
+        else if (method == "scalered" || method == "scalegreen" || method == "scaleblue") {
+            i++;
+            if (i >= argc) {
+                std::cerr << "Missing argument." << std::endl;
+                return 1;
+            }
+
+            try {
+                std::stoi(argv[i]);
+            }
+            catch (const std::invalid_argument& e) {
+                std::cerr << "Invalid argument, expected number." << std::endl;
+                return 1;
+            }
+            
+            if (method == "scalered") {
+                trackingImage = scaleRed(trackingImage, std::stoi(argv[i]));
+            }
+            else if (method == "scalegreen") {
+                trackingImage = scaleGreen(trackingImage, std::stoi(argv[i]));
+            }
+            else if (method == "scaleblue") {
+                trackingImage = scaleBlue(trackingImage, std::stoi(argv[i]));
+            }
         }
         else {
             std::cerr << "Invalid method name." << std::endl;
@@ -149,8 +191,6 @@ int main(int argc, char* argv[]) {
 
     try {
         trackingImage.writeToImage("./output/" + outputFile);
-        // temporary
-        cout << "Successfully output to " << outputFile << endl;
     }
     catch (const std::runtime_error& e) {
         std::cerr << "Failed to save output file." << std::endl;

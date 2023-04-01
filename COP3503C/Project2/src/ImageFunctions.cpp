@@ -196,6 +196,33 @@ Image Overlay(Image& A, Image& B) {
   return postOverlay;
 }
 
+Image addRed(Image& firstImage, int value) {
+  Image imageResult;
+  vector <Image::Pixel> firstPixels = firstImage.getPixels();
+
+  Image::Header header = firstImage.getHeader();
+  imageResult.setHeader(header);
+
+  vector <Image::Pixel> resultPixels;
+
+  int redValue;
+  for (unsigned int i = 0; i < firstPixels.size(); i++) {
+    Image::Pixel resultPixel;
+
+    redValue = firstPixels[i].redInt + value;
+    unsigned int redInt = clamp(redValue);
+    unsigned char redChar = firstImage.ConvertIntToChar(redInt);
+    resultPixel.red = redChar;
+
+    resultPixel.green = firstPixels[i].green;
+    resultPixel.blue = firstPixels[i].blue;
+    resultPixels.push_back(resultPixel);
+  }
+  imageResult.setPixels(resultPixels);
+
+  return imageResult;
+}
+
 Image addGreen(Image& firstImage, int value) {
   Image imageResult;
   vector <Image::Pixel> firstPixels = firstImage.getPixels();
@@ -209,7 +236,7 @@ Image addGreen(Image& firstImage, int value) {
   for (unsigned int i = 0; i < firstPixels.size(); i++) {
     Image::Pixel resultPixel;
 
-    greenValue = firstPixels[i].greenInt + 200;
+    greenValue = firstPixels[i].greenInt + value;
     unsigned int greenInt = clamp(greenValue);
     unsigned char greenChar = firstImage.ConvertIntToChar(greenInt);
     resultPixel.green = greenChar;
@@ -223,7 +250,34 @@ Image addGreen(Image& firstImage, int value) {
   return imageResult;
 }
 
-Image scaleRed(Image& firstImage, int value) {
+Image addBlue(Image& firstImage, int value) {
+  Image imageResult;
+  vector <Image::Pixel> firstPixels = firstImage.getPixels();
+
+  Image::Header header = firstImage.getHeader();
+  imageResult.setHeader(header);
+
+  vector <Image::Pixel> resultPixels;
+
+  int blueValue;
+  for (unsigned int i = 0; i < firstPixels.size(); i++) {
+    Image::Pixel resultPixel;
+
+    blueValue = firstPixels[i].blueInt + value;
+    unsigned int blueInt = clamp(blueValue);
+    unsigned char blueChar = firstImage.ConvertIntToChar(blueInt);
+    resultPixel.blue = blueChar;
+
+    resultPixel.red = firstPixels[i].red;
+    resultPixel.green = firstPixels[i].green;
+    resultPixels.push_back(resultPixel);
+  }
+  imageResult.setPixels(resultPixels);
+
+  return imageResult;
+}
+
+Image scaleRed(Image& firstImage, float value) {
   Image imageResult;
 
   Image::Header header = firstImage.getHeader();
@@ -237,7 +291,7 @@ Image scaleRed(Image& firstImage, int value) {
     Image::Pixel resultPixel;
 
     unsigned int redPixelInt = (unsigned int)(scale(firstPixels[i].redInt));
-    float redFloat = ((float)redPixelInt / 255.0f) * 4.0f;
+    float redFloat = ((float)redPixelInt / 255.0f) * value;
     redPixelInt = (unsigned int)scale(redFloat * 255.0f);
     redPixelInt = clamp(redPixelInt);
     unsigned char redChar = firstImage.ConvertIntToChar(redPixelInt);
@@ -248,6 +302,76 @@ Image scaleRed(Image& firstImage, int value) {
     resultPixel.green = greenPixelChar;
 
     resultPixel.blue = 0;
+
+    resultPixels.push_back(resultPixel);
+  }
+  imageResult.setPixels(resultPixels);
+
+  return imageResult;
+}
+
+Image scaleBlue(Image& firstImage, float value) {
+  Image imageResult;
+
+  Image::Header header = firstImage.getHeader();
+  imageResult.setHeader(header);
+  firstImage.setUnsignedInts();
+
+  vector<Image::Pixel> firstPixels = firstImage.getPixels();
+  vector<Image::Pixel> resultPixels;
+
+  for (unsigned int i = 0; i < firstPixels.size(); i++) {
+    Image::Pixel resultPixel;
+
+    unsigned int redPixelInt = (unsigned int)(scale(firstPixels[i].redInt));
+    unsigned char redPixelChar = firstImage.ConvertIntToChar(redPixelInt);
+    resultPixel.red = redPixelChar;
+
+    unsigned int greenPixelInt = (unsigned int)(scale(firstPixels[i].greenInt));
+    unsigned char greenPixelChar = firstImage.ConvertIntToChar(greenPixelInt);
+    resultPixel.green = greenPixelChar;
+
+    unsigned int bluePixelInt = (unsigned int)(scale(firstPixels[i].blueInt));
+    float blueFloat = ((float)bluePixelInt / 255.0f) * value;
+    bluePixelInt = (unsigned int)scale(blueFloat * 255.0f);
+    bluePixelInt = clamp(bluePixelInt);
+    unsigned char bluePixelChar = firstImage.ConvertIntToChar(bluePixelInt);
+    resultPixel.blue = bluePixelChar;
+
+    resultPixels.push_back(resultPixel);
+  }
+  imageResult.setPixels(resultPixels);
+
+  return imageResult;
+}
+
+Image scaleGreen(Image& firstImage, float value) {
+  Image imageResult;
+
+  Image::Header header = firstImage.getHeader();
+  imageResult.setHeader(header);
+  firstImage.setUnsignedInts();
+
+  vector<Image::Pixel> firstPixels = firstImage.getPixels();
+  vector<Image::Pixel> resultPixels;
+
+  for (unsigned int i = 0; i < firstPixels.size(); i++) {
+    Image::Pixel resultPixel;
+
+    unsigned int redPixelInt = (unsigned int)(scale(firstPixels[i].redInt));
+    unsigned char redPixelChar = firstImage.ConvertIntToChar(redPixelInt);
+    resultPixel.red = redPixelChar;
+
+    unsigned int greenPixelInt = (unsigned int)(scale(firstPixels[i].greenInt));
+    float greenFloat = ((float)greenPixelInt / 255.0f) * value;
+    greenPixelInt = (unsigned int)scale(greenFloat * 255.0f);
+    greenPixelInt = clamp(greenPixelInt);
+    unsigned char greenPixelChar = firstImage.ConvertIntToChar(greenPixelInt);
+    resultPixel.green = greenPixelChar;
+
+    unsigned int bluePixelInt = (unsigned int)(scale(firstPixels[i].blueInt));
+    unsigned char bluePixelChar = firstImage.ConvertIntToChar(bluePixelInt);
+    resultPixel.blue = bluePixelChar;
 
     resultPixels.push_back(resultPixel);
   }
@@ -267,17 +391,17 @@ Image splitChannels(string rgb, Image& firstImage) {
 
   for (unsigned int i = 0; i < firstPixels.size(); i++) {
       Image::Pixel resultPixel;
-      if (rgb == "red") {
+      if (rgb == "red" || rgb == "onlyred") {
           resultPixel.red = firstPixels[i].red;
           resultPixel.green = firstPixels[i].red;
           resultPixel.blue = firstPixels[i].red;
       }
-      else if (rgb == "green") {
+      else if (rgb == "green" || rgb == "onlygreen") {
           resultPixel.red = firstPixels[i].green;
           resultPixel.green = firstPixels[i].green;
           resultPixel.blue = firstPixels[i].green;
       }
-      else if (rgb == "blue") {
+      else if (rgb == "blue" || rgb == "onlyblue") {
           resultPixel.red = firstPixels[i].blue;
           resultPixel.green = firstPixels[i].blue;
           resultPixel.blue = firstPixels[i].blue;
