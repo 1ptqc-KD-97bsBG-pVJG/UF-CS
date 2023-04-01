@@ -18,7 +18,6 @@ int main(int argc, char* argv[]) {
     }
 
     std::string outputFile = argv[1];
-    std::string firstImageFile = argv[2];
 
     Image trackingImage;
 
@@ -26,6 +25,8 @@ int main(int argc, char* argv[]) {
         std::cerr << "Invalid file name." << std::endl;
         return 1;
     }
+    
+    std::string firstImageFile = argv[2];
 
     if (firstImageFile.find(".tga") == std::string::npos) {
         std::cerr << "Invalid file name." << std::endl;
