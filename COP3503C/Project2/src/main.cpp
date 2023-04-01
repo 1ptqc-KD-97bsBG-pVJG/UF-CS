@@ -22,6 +22,11 @@ int main(int argc, char* argv[]) {
 
     Image trackingImage;
 
+    if (outputFile.find(".tga") == std::string::npos) {
+        std::cerr << "Invalid file name." << std::endl;
+        return 1;
+    }
+
     if (firstImageFile.find(".tga") == std::string::npos) {
         std::cerr << "Invalid file name." << std::endl;
         return 1;
