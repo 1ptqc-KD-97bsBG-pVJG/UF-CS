@@ -42,8 +42,40 @@ int main(int argc, char* argv[]) {
     }
 
     // Iterate through the remaining arguments
-    for (int i = 3; i < argc; ++i) {
+    int i = 3;
+    while (i < argc) {
         std::string method = argv[i];
+
+        if (i == 5 && method == "screen") {
+            Image newImage;
+
+            trackingImage.writeToImage("./output/temp.tga");
+            newImage.loadImage("./output/temp.tga");
+
+
+            i++;
+            if (i >= argc) {
+                std::cerr << "Missing argument." << std::endl;
+                return 1;
+            }
+            std::string secondImageFile = argv[i];
+            if (secondImageFile.find(".tga") == std::string::npos) {
+                std::cerr << "Invalid argument, invalid file name." << std::endl;
+                return 1;
+            }
+            Image secondImage;
+              try {
+                secondImage.loadImage("./" + secondImageFile);
+            }
+            catch (const std::runtime_error& e) {
+                std::cerr << "Invalid argument, file does not exist." << std::endl;
+                return 1;
+            }
+
+            trackingImage = Screen(newImage, secondImage);
+            break;
+
+        }
 
         if (method == "multiply" || method == "subtract" || method == "overlay" || method == "screen") {
             i++;
@@ -68,16 +100,20 @@ int main(int argc, char* argv[]) {
             // LOOKS GOOD
 
             if (method == "multiply") {
-                trackingImage = Multiply(trackingImage, secondImage);
+                Image temp = Multiply(trackingImage, secondImage);
+                trackingImage = temp;
             }
             else if (method == "subtract") {
-                trackingImage = Subtract(trackingImage, secondImage);
+                Image temp = Subtract(trackingImage, secondImage);
+                trackingImage = temp;
             }
             else if (method == "overlay") {
-                trackingImage = Overlay(trackingImage, secondImage);
+                Image temp = Overlay(trackingImage, secondImage);
+                trackingImage = temp;
             }
             else if (method == "screen") {
-                trackingImage = Screen(trackingImage, secondImage);
+                Image temp = Screen(trackingImage, secondImage);
+                trackingImage = temp;
             }
         }
         // LOOKS GOOD
@@ -196,6 +232,7 @@ int main(int argc, char* argv[]) {
             std::cerr << "Invalid method name." << std::endl;
             return 1;
         }
+        i++;
     }
 
     try {
