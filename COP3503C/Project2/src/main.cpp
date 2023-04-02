@@ -73,7 +73,8 @@ int main(int argc, char* argv[]) {
             }
 
             trackingImage = Screen(newImage, secondImage);
-            break;
+            trackingImage.writeToImage("./output/part3.tga");
+            return 0;
 
         }
 
