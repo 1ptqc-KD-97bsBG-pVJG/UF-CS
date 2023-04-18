@@ -2,6 +2,7 @@
 #include <cctype>
 #include <iostream>
 #include <string>
+using namespace std;
 
 int main()
 {
@@ -56,6 +57,15 @@ int main()
             if (event.type == sf::Event::Closed) {
                 window.close();
             }
+            else if (event.type == sf::Event::KeyPressed) {
+                if (event.key.code == sf::Keyboard::Enter) {
+                    std::cout << "enter key pressed" << std::endl;
+                    if (!userName.empty()) {
+                        std::cout << userName << std::endl;
+                        window.close();
+                    }
+                }
+            }
             else if (event.type == sf::Event::TextEntered) {
                 // handle functional button input
                 if (event.text.unicode == 8) { // backspace character
@@ -68,12 +78,7 @@ int main()
                         inputText.setPosition(window.getSize().x / 2.0f, window.getSize().y / 2.0f - 45);
                     }
                 }
-                else if (event.text.unicode == 13) { // enter character
-                    if (!userName.empty()) {
-                        std::cout << userName << std::endl;
-                        window.close();
-                    }
-                }
+
                     // User entered text
                 else if (userName.length() < 10 && isalpha(event.text.unicode)) { // limit to 10 characters
                     userName += static_cast<char>(event.text.unicode);
