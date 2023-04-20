@@ -3,7 +3,7 @@ project(Project3)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-set(SOURCE_FILES main.cpp)
+set(SOURCE_FILES main.cpp board.cpp board.h tile.cpp tile.h texturemanager.cpp texturemanager.h)
 add_executable(Project3 ${SOURCE_FILES})
 include_directories(/usr/local/include)
 

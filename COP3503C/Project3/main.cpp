@@ -25,29 +25,10 @@ int displayLeaderboard() {
         string formattedLine;
         int postition = line.find(",");
         formattedLine = to_string(lineIterator) + ".\t" + line.substr(0, postition) + "\t" + line.substr(postition + 1, line.length());
-
-//        You will also display the contents of the "leaderboard.txt" file with the following specifications:
-//        – Style: Bold
-//        – Color: White (Default)
-//        – Size: 18px
-//        – Position: width/2.0f, height/2.0f + 20
-//        – Note: It will be easier for you if you store all the rows in a string separated by two line spaces (\n\n). Then you can use this string to create a sf::Text and set its position as specified above. Also, you can give a tab space (\t) between the values
-//        i.e., ("1." + "\t" + "07:01" + "\t" + "Alex").
-
-
-
         leaderboard.push_back(formattedLine);
         lineIterator++;
     }
     leaderboardFile.close();
-
-
-
-    std::cout << "Iterated through leaderboard file" << std::endl;
-
-
-
-
 
     sf::RenderWindow leaderboardWindow(sf::VideoMode(800, 600), "Minesweeper");
     // Load the font
@@ -58,27 +39,29 @@ int displayLeaderboard() {
     }
 
     // Set up leaderboard text
+    // FIXME: fix sizing and positioning
     sf::Text leaderboardTitle("LEADERBOARD", font, 20);
     leaderboardTitle.setStyle(sf::Text::Bold | sf::Text::Underlined);
     leaderboardTitle.setFillColor(sf::Color::White);
     sf::FloatRect leaderboardTitleBounds = leaderboardTitle.getLocalBounds();
     leaderboardTitle.setOrigin(leaderboardTitleBounds.left + leaderboardTitleBounds.width / 2.0f,
                                leaderboardTitleBounds.top + leaderboardTitleBounds.height / 2.0f);
-    leaderboardTitle.setPosition(leaderboardWindow.getSize().x / 2.0f, leaderboardWindow.getSize().y / 2.0f - 200);
+    leaderboardTitle.setPosition(leaderboardWindow.getSize().x / 2.0f, leaderboardWindow.getSize().y / 2.0f - 120);
 
     leaderboardWindow.clear(sf::Color::Blue);
     leaderboardWindow.draw(leaderboardTitle);
 
-    std::cout << "iterating..." << std::endl;
     for (int i = 0; i < leaderboard.size(); i++) {
         // display leaderboard text on screen
-        std::cout << leaderboard[i] << std::endl;
+        // FIXEME: fix sizing and positioning
+        // FIXME: needs to be centered too
         sf::Text leaderboardText(leaderboard[i], font, 18);
         leaderboardText.setFillColor(sf::Color::White);
         sf::FloatRect leaderboardTextBounds = leaderboardText.getLocalBounds();
         leaderboardText.setOrigin(leaderboardTextBounds.left + leaderboardTextBounds.width / 2.0f,
                               leaderboardTextBounds.top + leaderboardTextBounds.height / 2.0f);
         leaderboardText.setPosition(leaderboardWindow.getSize().x / 2.0f, leaderboardWindow.getSize().y / 2.0f - 100 + (i * 50)); // FIXME: not sure how much spacing is required between scores
+        //    leaderboardTitle.setPosition(x: ((board.num_cols*16) / 2.0f, y: (((board.num_rows*16)+50) / 2.0f)+20);
         leaderboardWindow.draw(leaderboardText);
     }
 
@@ -155,7 +138,6 @@ int main()
             }
             else if (event.type == sf::Event::KeyPressed) {
                 if (event.key.code == sf::Keyboard::Enter) {
-                    std::cout << "enter key pressed" << std::endl;
                     if (!userName.empty()) {
                         std::cout << userName << std::endl;
                         window.close();
@@ -220,8 +202,15 @@ int main()
         return EXIT_FAILURE;
     }
     else {
-        std::cout << "Calling function" << std::endl;
-        displayLeaderboard();
+//        FIXME: delete this temporary method of displaying leaderboard
+        if (userName == "Leader") {
+            displayLeaderboard();
+        }
+        else {
 
+//            Game game(userName);
+//            game.run();
+
+        }
     }
 }
