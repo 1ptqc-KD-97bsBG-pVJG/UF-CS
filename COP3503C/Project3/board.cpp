@@ -44,7 +44,7 @@ Board::Board() {
         cout << "Error" << endl;
     else if (!hiddenTile.loadFromFile("../files/images/tile_hidden.png"))
         cout << "Error" << endl;
-    else if (!shownTile.loadFromFile("../files/images/tile_revealed.png"))
+    else if (!revealedTile.loadFromFile("../files/images/tile_revealed.png"))
         cout << "Error" << endl;
 
 
@@ -130,7 +130,7 @@ void Board::setNeighbors() {
                     int numAdjacentMines = temp->getAdjMines();
                     switch (numAdjacentMines) {
                         case 0:
-                            setSprite(temp->getSprite2(), shownTile);
+                            setSprite(temp->getSprite2(), revealedTile);
                             break;
                         case 1:
                             setSprite(temp->getSprite2(), number1);
@@ -182,12 +182,15 @@ void Board::drawBoard(RenderWindow &window) {
                     window.draw(*sprite2);
                 } else {
                     if (tile->getIsMine()) {
-                        setSprite(sprite, shownTile);
+                        setSprite(sprite, revealedTile);
                         window.draw(*sprite);
                         window.draw(*sprite2);
                     } else {
                         window.draw(*sprite);
                     }
+                }
+                if (tile->getIsFlagged() && !tile->getIsShown()) {
+                    window.draw(*tile->getFlagSprite());
                 }
             } else if (isWon) {
                 if (tile->getIsShown()) {
@@ -202,7 +205,10 @@ void Board::drawBoard(RenderWindow &window) {
             } else {
                 if (isDebug) {
                     window.draw(*sprite);
-                    if (tile->getIsMine() || tile->getIsShown()) {
+                    if (tile->getIsMine() || tile ->getIsShown()) {
+                        window.draw(*sprite2);
+                    }
+                    if (tile->getIsFlagged() && !tile->getIsShown()) {
                         window.draw(*tile->getFlagSprite());
                     }
                 } else {
@@ -216,6 +222,14 @@ void Board::drawBoard(RenderWindow &window) {
                             window.draw(*tile->getFlagSprite());
                         }
                     }
+                }
+            }
+            if (isPaused) {
+                setSprite(sprite, revealedTile);
+                window.draw(*sprite);
+            } else {
+                if (!tile->getIsShown()) {
+                    setSprite(tile->getSprite(), hiddenTile);
                 }
             }
             if (tile->getIsFlagged() && !tile->getIsShown()) {
@@ -332,7 +346,7 @@ void Board::loadFromFile(string file) {
         if (x == '0') {
             tile->setIsMine(false);
             tile->setIsShown(false);
-            setSprite(tile->getSprite2(), shownTile);
+            setSprite(tile->getSprite2(), revealedTile);
         }
         else if (x == '1') {
             tile->setIsMine(true);
@@ -359,6 +373,17 @@ void Board::onClick(int x, int y, string clickType) {
             else
                 isDebug = true;
         }
+    // pause button functionality
+    } else if (x >= (64 * 9) && x < (64 * 10) && !isLost && !isWon) {
+        if (isPaused) {
+            isPaused = false;
+        } else {
+            isPaused = true;
+        }
+    // leaderboard button functionality
+    } else if (x >= (64 * 10) && x < (64 * 11) && !isLost && !isWon) {
+        // TODO: leaderboard functionality
+        cout << "leaderboard button clicked" << endl;
     } else if (!isLost && !isWon) {
         int row = y / 32;
         int column = x / 32;
@@ -375,7 +400,7 @@ void Board::onClick(int x, int y, string clickType) {
 
 void Board::onReveal(Tile* tile) {
     tile->setIsShown(true);
-    setSprite(tile->getSprite(), shownTile);
+    setSprite(tile->getSprite(), revealedTile);
     if (tile->getIsMine()) {
         endGame();
     } else {

@@ -13,10 +13,11 @@ class Board {
     bool isDebug = false;
     bool isLost = false;
     bool isWon = false;
+    bool isPaused = false;
     int remainingTiles = 400;
 
     Texture digits, debug, faceHappy, faceLose, faceWin, flag, mine, number1, number2, number3, number4, number5,
-            number6, number7, number8, pause, play, leaderboard, hiddenTile, shownTile;
+            number6, number7, number8, pause, play, leaderboard, hiddenTile, revealedTile;
 
     Sprite faceSprite, debugSprite, pauseSprite, playSprite, leaderboardSprite, scoreSprite1, scoreSprite2, scoreSprite3;
 
