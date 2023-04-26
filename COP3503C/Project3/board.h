@@ -1,23 +1,61 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <fstream>
-#include "Tile.h"
+#include <string>
+#include "tile.h"
+
+//TODO: finish this file
 
 class Board {
-    int rows;
-    int columns;
     int numMines;
-    Tile** tiles;
+    Tile* tiles[16][25];
     int GetMines();
-//    MineCounter mineCounter;
+    bool isDebug = false;
+    bool isLost = false;
+    bool isWon = false;
+    int remainingTiles = 400;
+
+    Texture digits, debug, faceHappy, faceLose, faceWin, flag, mine, number1, number2, number3, number4, number5,
+            number6, number7, number8, pause, play, leaderboard, hiddenTile, shownTile;
+
+    Sprite faceSprite, debugSprite, pauseSprite, playSprite, leaderboardSprite, scoreSprite1, scoreSprite2, scoreSprite3;
+
+    string score = "000";
+
 public:
-    Board(int rows, int columns, int numMines);
-    void GenerateTiles(std::string board);
-    void Draw(sf::RenderWindow& window, bool displayMines);
-    void Clear();
-    bool RevealTile(int x, int y);
-    void RevealAll();
-    void FlagTile(int x, int y);
-    bool CheckIfWon();
+    // Constructor
+    Board();
+
+    // Destructor
     ~Board();
+
+    // Accessors
+    Tile* getTile(int row, int column);
+
+    // Mutators
+    void setNeighbors();
+
+    void setSprite(Sprite* sprite, Texture &text);
+
+    // Functions
+    void drawBoard(RenderWindow &window);
+
+    void updateScore();
+
+    void addScore(int toAdd);
+
+    void generateMines();
+
+    void setup();
+
+    void loadFromFile(string fileName);
+
+    void onClick(int x, int y, string clickType);
+
+    void onReveal(Tile* tile);
+
+    void toggleFlag(Tile* tile);
+
+    void endGame();
+    void winGame();
 };

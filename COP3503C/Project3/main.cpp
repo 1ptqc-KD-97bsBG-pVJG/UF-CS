@@ -3,6 +3,8 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include "board.h"
+#include "tile.h"
 using namespace std;
 
 
@@ -83,8 +85,7 @@ int displayLeaderboard() {
     return 0;
 }
 
-int main()
-{
+int displayWelcome() {
     sf::RenderWindow window(sf::VideoMode(800, 600), "Minesweeper");
     // Load the font
     sf::Font font;
@@ -195,22 +196,40 @@ int main()
         window.draw(inputText);
         window.display();
     }
-    window.close();
 
-    // Launch game window, but only if the player has entered a name
     if (userName.empty()) {
         return EXIT_FAILURE;
     }
-    else {
-//        FIXME: delete this temporary method of displaying leaderboard
-        if (userName == "Leader") {
-            displayLeaderboard();
-        }
-        else {
 
-//            Game game(userName);
-//            game.run();
+    window.close();
+    return 0;
+}
 
+int main()
+{
+    displayWelcome();
+
+    sf::RenderWindow gameWindow(sf::VideoMode(800, 600), "Minesweeper");
+
+    Board board;
+    while(gameWindow.isOpen()) {
+        sf::Event event;
+        while (gameWindow.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                gameWindow.close();
+            } else if (event.type == sf::Event::MouseButtonReleased) {
+                if (event.mouseButton.button == sf::Mouse::Left) {
+                    board.onClick(event.mouseButton.x, event.mouseButton.y, "left");
+                } else if (event.mouseButton.button == sf::Mouse::Right) {
+                    board.onClick(event.mouseButton.x, event.mouseButton.y, "right");
+                }
+            }
         }
+
+        gameWindow.clear();
+        board.drawBoard(gameWindow);
+        gameWindow.display();
     }
+    displayLeaderboard();
+    return 0;
 }
