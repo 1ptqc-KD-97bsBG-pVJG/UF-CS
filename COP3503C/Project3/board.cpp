@@ -3,6 +3,7 @@
 #include <fstream>
 #include <cstdlib>
 #include <ctime>
+#include "leaderboard.h"
 using namespace std;
 using namespace sf;
 
@@ -232,7 +233,7 @@ void Board::drawBoard(RenderWindow &window) {
                     setSprite(tile->getSprite(), hiddenTile);
                 }
             }
-            if (tile->getIsFlagged() && !tile->getIsShown()) {
+            if (tile->getIsFlagged() && !tile->getIsShown() && !isPaused) {
                 window.draw(*tile->getFlagSprite());
             }
         }
@@ -393,7 +394,9 @@ void Board::onClick(int x, int y, string clickType) {
         // leaderboard button functionality
         } else if (x >= (64 * 10) && x < (64 * 11) && !isLost && !isWon) {
             // TODO: leaderboard functionality
+            // REMOVE ME
             cout << "leaderboard button clicked" << endl;
+            displayLeaderboard();
         }
     } else if (!isLost && !isWon && !isPaused) {
         // REMOVE ME
