@@ -48,8 +48,6 @@ Board::Board() {
         cout << "Error" << endl;
 
 
-
-
     faceSprite.setTexture(faceHappy);
     faceSprite.move(Vector2f(6 * 64, 32 * 16));
     debugSprite.setTexture(debug);
@@ -68,10 +66,6 @@ Board::Board() {
 }
 
 
-
-
-
-
 // destructor
 Board::~Board() {
     // FIXME: correct this hardcoding
@@ -81,7 +75,6 @@ Board::~Board() {
         }
     }
 }
-
 
 // accessors
 Tile* Board::getTile(int row, int column) {
@@ -174,8 +167,8 @@ void Board::setSprite(sf::Sprite* sprite, sf::Texture &texture) {
     sprite->setTexture(texture);
 }
 
-
 void Board::drawBoard(RenderWindow &window) {
+    window.clear(Color::White);
     // FIXME: correct this hardcoding
     for (int i = 0; i < 16; i++) {
         for (int j = 0; j < 25; j++) {
@@ -225,6 +218,9 @@ void Board::drawBoard(RenderWindow &window) {
                     }
                 }
             }
+            if (tile->getIsFlagged() && !tile->getIsShown()) {
+                window.draw(*tile->getFlagSprite());
+            }
         }
     }
     updateScore();
@@ -268,7 +264,6 @@ void Board::updateScore() {
     scoreSprite3.setTextureRect(IntRect(third * 21, 0, 21, 32));
 }
 
-
 void Board::addScore(int amount) {
     srand(time(nullptr));
     while (numMines < 50) {
@@ -300,7 +295,6 @@ void Board::generateMines() {
         }
     }
 }
-
 
 void Board::setup() {
     isLost = false;
