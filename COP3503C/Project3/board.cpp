@@ -69,7 +69,7 @@ Board::Board() {
 // destructor
 Board::~Board() {
     // FIXME: correct this hardcoding
-    for (int i =9; i < 16; i++) {
+    for (int i = 0; i < 16; i++) {
         for(int j = 0; j < 25; j++) {
             delete tiles[i][j];
         }
@@ -94,7 +94,7 @@ void Board::setNeighbors() {
                         neighbors.push_back(tile);
                     }
                     if (j - 1 >= 0) {
-                        Tile* tile = tiles[i - 1][j + 1];
+                        Tile* tile = tiles[i - 1][j - 1];
                         neighbors.push_back(tile);
                     }
                     Tile* tile = tiles[i - 1][j];
@@ -366,31 +366,47 @@ void Board::loadFromFile(string file) {
 
 void Board::onClick(int x, int y, string clickType) {
     // FIXME: correct this hardcoding
+    // REMOVE ME
+    cout << "x: " << x << " y: " << y << endl;
     if (y > 512 && y < 578) {
+        if ( x >= (64 * 6) && x <= (64 * 7)) {
+            setup();
+        }
+
         if (x >= (64 * 8) && x <= (64 * 9) && !isLost && !isWon) {
             if (isDebug)
                 isDebug = false;
             else
                 isDebug = true;
         }
-    // pause button functionality
-    } else if (x >= (64 * 9) && x < (64 * 10) && !isLost && !isWon) {
-        if (isPaused) {
-            isPaused = false;
-        } else {
-            isPaused = true;
+        // pause button functionality
+        else if (x >= (64 * 9) && x < (64 * 10) && !isLost && !isWon) {
+            if (isPaused) {
+                isPaused = false;
+                // REMOVE ME
+                cout << "game unpaused" << endl;
+            } else {
+                isPaused = true;
+                // REMOVE ME
+                cout << "game paused" << endl;
+            }
+        // leaderboard button functionality
+        } else if (x >= (64 * 10) && x < (64 * 11) && !isLost && !isWon) {
+            // TODO: leaderboard functionality
+            cout << "leaderboard button clicked" << endl;
         }
-    // leaderboard button functionality
-    } else if (x >= (64 * 10) && x < (64 * 11) && !isLost && !isWon) {
-        // TODO: leaderboard functionality
-        cout << "leaderboard button clicked" << endl;
-    } else if (!isLost && !isWon) {
+    } else if (!isLost && !isWon && !isPaused) {
+        // REMOVE ME
+        cout << "clickType: " << clickType << endl;
         int row = y / 32;
         int column = x / 32;
         Tile* temp = tiles[row][column];
+        // REMOVE ME
+        cout << temp->getIsShown() << endl;
         if (clickType == "left") {
             if (!temp->getIsFlagged() && !temp->getIsShown()) {
                 onReveal(temp);
+                cout << "attempting to reveal tile..." << endl;
             }
         } else if (clickType == "right") {
             toggleFlag(temp);
