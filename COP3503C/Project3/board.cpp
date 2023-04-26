@@ -316,7 +316,7 @@ void Board::setup() {
             }
             tiles[i][j] = new Tile(hiddenTile, flag);
             // FIXME: correct this hardcoding
-            tiles[i][j]->move(i * 32, j * 32);
+            tiles[i][j]->move(j * 32, i * 32);
         }
     }
     numMines = 0;
