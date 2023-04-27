@@ -133,10 +133,9 @@ int displayWelcome() {
 int main()
 {
     displayWelcome();
-
-    sf::RenderWindow gameWindow(sf::VideoMode(800, 600), "Minesweeper");
-
     Board board;
+    sf::RenderWindow gameWindow(sf::VideoMode((board.cols * 32), (board.rows * 32 + 100)), "Minesweeper");
+
     while(gameWindow.isOpen()) {
         sf::Event event;
         while (gameWindow.pollEvent(event)) {

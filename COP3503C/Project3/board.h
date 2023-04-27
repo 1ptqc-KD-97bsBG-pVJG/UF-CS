@@ -16,6 +16,7 @@ class Board {
     bool isWon = false;
     bool isPaused = false;
     int remainingTiles = 400;
+    int maxNumMines = 50;
 
     Texture digits, debug, faceHappy, faceLose, faceWin, flag, mine, number1, number2, number3, number4, number5,
             number6, number7, number8, pause, play, leaderboard, hiddenTile, revealedTile;
