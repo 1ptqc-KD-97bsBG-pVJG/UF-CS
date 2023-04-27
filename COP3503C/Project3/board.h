@@ -3,12 +3,13 @@
 #include <fstream>
 #include <string>
 #include "tile.h"
+using namespace std;
 
 //TODO: finish this file
 
 class Board {
     int numMines;
-    Tile* tiles[16][25];
+    vector<vector<Tile*>> tiles;
     int GetMines();
     bool isDebug = false;
     bool isLost = false;
@@ -24,6 +25,9 @@ class Board {
     string score = "000";
 
 public:
+    int rows = 16;
+    int cols = 25;
+
     // Constructor
     Board();
 

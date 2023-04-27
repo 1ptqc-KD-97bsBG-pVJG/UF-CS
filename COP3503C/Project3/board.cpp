@@ -333,35 +333,61 @@ void Board::setup() {
     setNeighbors();
 }
 
-void Board::loadFromFile(string file) {
-    char x;
-    fstream File(file, fstream::in);
-    int i = 0;
-    int j = 0;
-    numMines = 0;
-    remainingTiles = 400;
+//void Board::loadFromFile(string file) {
+//    ifstream configFile(file);
+//    string line;
+//    getline(configFile, line);
+//    cols = stoi(line);
+//    getline(configFile, line);
+//    rows = stoi(line);
+//    getline(configFile, line);
+//    numMines = stoi(line);
+//
+//    // create the board
+//    tiles.resize(rows);
+//    for (int i = 0; i < rows; i++) {
+//        tiles[i].resize(cols);
+//    }
+//    for (int i = 0; i < rows; i++) {
+//        for (int j = 0; j < cols; j++) {
+//            if (!tiles[i][j]) {
+//                delete tiles[i][j];
+//            }
+//            tiles[i][j] = new Tile(hiddenTile, flag);
+//            tiles[i][j]->move(i * 32, j * 32);
+//        }
+//    }
 
-    while (File >> x) {
-        Tile* tile = tiles[i][j];
-        setSprite(tile->getSprite(), hiddenTile);
-        if (x == '0') {
-            tile->setIsMine(false);
-            tile->setIsShown(false);
-            setSprite(tile->getSprite2(), revealedTile);
-        }
-        else if (x == '1') {
-            tile->setIsMine(true);
-            remainingTiles--;
-            tile->setIsShown(false);
-            numMines++;
-            setSprite(tile->getSprite2(), mine);
-        }
-        j++;
-        if (j > 24) {
-            j = 0;
-            i++;
-        }
-    }
+
+
+//    char x;
+//    fstream File(file, fstream::in);
+//    int i = 0;
+//    int j = 0;
+//    numMines = 0;
+//    remainingTiles = 400;
+
+//    while (File >> x) {
+//        Tile* tile = tiles[i][j];
+//        setSprite(tile->getSprite(), hiddenTile);
+//        if (x == '0') {
+//            tile->setIsMine(false);
+//            tile->setIsShown(false);
+//            setSprite(tile->getSprite2(), revealedTile);
+//        }
+//        else if (x == '1') {
+//            tile->setIsMine(true);
+//            remainingTiles--;
+//            tile->setIsShown(false);
+//            numMines++;
+//            setSprite(tile->getSprite2(), mine);
+//        }
+//        j++;
+//        if (j > 24) {
+//            j = 0;
+//            i++;
+//        }
+//    }
     setNeighbors();
 }
 
