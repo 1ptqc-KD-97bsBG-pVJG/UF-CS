@@ -5,8 +5,6 @@
 #include "tile.h"
 using namespace std;
 
-//TODO: finish this file
-
 class Board {
     int numMines;
     vector<vector<Tile*>> tiles;
@@ -15,7 +13,7 @@ class Board {
     bool isLost = false;
     bool isWon = false;
     bool isPaused = false;
-    int remainingTiles = 400;
+    int remainingTiles = rows * cols;
     int maxNumMines = 50;
 
     Texture digits, debug, faceHappy, faceLose, faceWin, flag, mine, number1, number2, number3, number4, number5,

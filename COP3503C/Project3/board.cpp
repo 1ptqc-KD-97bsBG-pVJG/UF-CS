@@ -50,18 +50,18 @@ Board::Board() {
 
 
     faceSprite.setTexture(faceHappy);
-    faceSprite.move(Vector2f(6 * 64, 32 * rows));
+    faceSprite.move(Vector2f(((cols / 2.0) * 32) - 32, 32 * (rows + 0.5f)));
     debugSprite.setTexture(debug);
-    debugSprite.move(Vector2f(8 * 64, 32 * rows));
+    debugSprite.move(Vector2f((cols * 32) - 304, 32 * (rows + 0.5f)));
     pauseSprite.setTexture(pause);
-    pauseSprite.move(Vector2f(9 * 64, 32 * rows));
+    pauseSprite.move(Vector2f((cols * 32) - 240, 32 * (rows + 0.5f)));
     leaderboardSprite.setTexture(leaderboard);
-    leaderboardSprite.move(Vector2f(10 * 64, 32 * rows));
-    scoreSprite1.move(Vector2f(0, 32 * rows));
+    leaderboardSprite.move(Vector2f((cols * 32) - 176, 32 * (rows + 0.5f)));
+    scoreSprite1.move(Vector2f(12, (32 * (rows + 0.5f) + 16)));
     scoreSprite1.setTexture(digits);
-    scoreSprite2.move(Vector2f(21, 32 * rows));
+    scoreSprite2.move(Vector2f(33, (32 * (rows + 0.5f) + 16)));
     scoreSprite2.setTexture(digits);
-    scoreSprite3.move(Vector2f(42, 32 * rows));
+    scoreSprite3.move(Vector2f(54, (32 * (rows + 0.5f) + 16)));
     scoreSprite3.setTexture(digits);
     setup();
 }
@@ -353,11 +353,12 @@ void Board::loadFromFile(string file) {
 }
 
 void Board::onClick(int x, int y, string clickType) {
+
     // FIXME: correct this hardcoding
     // REMOVE ME
     cout << "x: " << x << " y: " << y << endl;
-    if (y > 512 && y < 578) {
-        if ( x >= (64 * 6) && x <= (64 * 7)) {
+    if (y > (32 * rows + 0.5f) && y < (32 * (rows + 0.5f) + 66)) {
+        if ( x >= (((cols / 2.0) * 32) - 32) && x <= ((cols / 2.0) * 32 + 34)) {
             setup();
         }
 
@@ -368,31 +369,24 @@ void Board::onClick(int x, int y, string clickType) {
                 isDebug = true;
         }
         // pause button functionality
-        else if (x >= (64 * 9) && x < (64 * 10) && !isLost && !isWon) {
+        else if (x >= (cols * 32 - 304) && x < (cols * 32 - 238) && !isLost && !isWon) {
             if (isPaused) {
                 isPaused = false;
                 // REMOVE ME
                 cout << "game unpaused" << endl;
             } else {
                 isPaused = true;
-                // REMOVE ME
-                cout << "game paused" << endl;
             }
         // leaderboard button functionality
-        } else if (x >= (64 * 10) && x < (64 * 11) && !isLost && !isWon) {
-            // TODO: leaderboard functionality
-            // REMOVE ME
-            cout << "leaderboard button clicked" << endl;
-            displayLeaderboard();
+        } else if (x >= (cols * 32 - 176) && x < (cols * 32 - 110) && !isLost && !isWon) {
+
+            displayLeaderboard(16 * cols, rows * 32 - 110);
         }
     } else if (!isLost && !isWon && !isPaused) {
-        // REMOVE ME
-        cout << "clickType: " << clickType << endl;
         int row = y / 32;
         int column = x / 32;
         Tile* temp = tiles[row][column];
-        // REMOVE ME
-        cout << temp->getIsShown() << endl;
+
         if (clickType == "left") {
             if (!temp->getIsFlagged() && !temp->getIsShown()) {
                 onReveal(temp);
@@ -406,6 +400,7 @@ void Board::onClick(int x, int y, string clickType) {
 
 void Board::onReveal(Tile* tile) {
     tile->setIsShown(true);
+    cout << tile->getIsShown() << endl;
     setSprite(tile->getSprite(), revealedTile);
     if (tile->getIsMine()) {
         endGame();
@@ -447,7 +442,6 @@ void Board::winGame() {
     isDebug = false;
     isWon = true;
     setSprite(&faceSprite, faceWin);
-    // FIXME: correct this hardcoding
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
             Tile* tile = tiles[i][j];

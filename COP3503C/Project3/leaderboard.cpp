@@ -6,7 +6,7 @@
 #include "leaderboard.h"
 using namespace std;
 
-int displayLeaderboard() {
+int displayLeaderboard(int windowWidth, int windowHeight) {
     //    open leaderboard file to load times and names in the format: 07:41,Alex
     sf::Event event;
 
@@ -27,7 +27,7 @@ int displayLeaderboard() {
     }
     leaderboardFile.close();
 
-    sf::RenderWindow leaderboardWindow(sf::VideoMode(800, 600), "Minesweeper");
+    sf::RenderWindow leaderboardWindow(sf::VideoMode(windowWidth, windowHeight), "Minesweeper");
     // Load the font
     sf::Font font;
     if (!font.loadFromFile("../files/font.ttf")) {
@@ -43,7 +43,7 @@ int displayLeaderboard() {
     sf::FloatRect leaderboardTitleBounds = leaderboardTitle.getLocalBounds();
     leaderboardTitle.setOrigin(leaderboardTitleBounds.left + leaderboardTitleBounds.width / 2.0f,
                                leaderboardTitleBounds.top + leaderboardTitleBounds.height / 2.0f);
-    leaderboardTitle.setPosition(leaderboardWindow.getSize().x / 2.0f, leaderboardWindow.getSize().y / 2.0f - 120);
+    leaderboardTitle.setPosition(leaderboardWindow.getSize().x / 2.0f, leaderboardWindow.getSize().y / 2.0f - 150);
 
     leaderboardWindow.clear(sf::Color::Blue);
     leaderboardWindow.draw(leaderboardTitle);
@@ -57,8 +57,8 @@ int displayLeaderboard() {
         sf::FloatRect leaderboardTextBounds = leaderboardText.getLocalBounds();
         leaderboardText.setOrigin(leaderboardTextBounds.left + leaderboardTextBounds.width / 2.0f,
                                   leaderboardTextBounds.top + leaderboardTextBounds.height / 2.0f);
-        leaderboardText.setPosition(leaderboardWindow.getSize().x / 2.0f, leaderboardWindow.getSize().y / 2.0f - 100 + (i * 50)); // FIXME: not sure how much spacing is required between scores
-        //    leaderboardTitle.setPosition(x: ((board.num_cols*16) / 2.0f, y: (((board.num_rows*16)+50) / 2.0f)+20);
+        leaderboardText.setPosition(leaderboardWindow.getSize().x / 2.0f, leaderboardWindow.getSize().y / 2.0f - 80 + (i * 60)); // Increased vertical spacing between items
+
         leaderboardWindow.draw(leaderboardText);
     }
 

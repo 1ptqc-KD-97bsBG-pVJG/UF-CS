@@ -154,6 +154,6 @@ int main()
         board.drawBoard(gameWindow);
         gameWindow.display();
     }
-    displayLeaderboard();
+    displayLeaderboard(16 * board.cols, board.rows * 32 - 110);
     return 0;
 }

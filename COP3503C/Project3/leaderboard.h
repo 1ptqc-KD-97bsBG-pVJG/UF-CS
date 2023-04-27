@@ -4,4 +4,4 @@
 using namespace std;
 using namespace sf;
 
-int displayLeaderboard();
+int displayLeaderboard(int windowWidth, int windowHeight);
