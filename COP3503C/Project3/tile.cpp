@@ -1,6 +1,5 @@
 #include <iostream>
 #include "tile.h"
-#include "texturemanager.h"
 
 // constructor
 Tile::Tile(sf::Texture &texture, sf::Texture &flagTexture) {

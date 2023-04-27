@@ -70,13 +70,6 @@ build CMakeFiles/Project3.dir/tile.cpp.o: CXX_COMPILER__Project3_Debug /Users/dy
   OBJECT_DIR = CMakeFiles/Project3.dir
   OBJECT_FILE_DIR = CMakeFiles/Project3.dir
 
-build CMakeFiles/Project3.dir/texturemanager.cpp.o: CXX_COMPILER__Project3_Debug /Users/dylanlon0779/Documents/src/UF/COP3503C/Project3/texturemanager.cpp || cmake_object_order_depends_target_Project3
-  DEP_FILE = CMakeFiles/Project3.dir/texturemanager.cpp.o.d
-  FLAGS = -std=c++11 -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/usr/local/include -isystem /opt/homebrew/include
-  OBJECT_DIR = CMakeFiles/Project3.dir
-  OBJECT_FILE_DIR = CMakeFiles/Project3.dir
-
 build CMakeFiles/Project3.dir/leaderboard.cpp.o: CXX_COMPILER__Project3_Debug /Users/dylanlon0779/Documents/src/UF/COP3503C/Project3/leaderboard.cpp || cmake_object_order_depends_target_Project3
   DEP_FILE = CMakeFiles/Project3.dir/leaderboard.cpp.o.d
   FLAGS = -std=c++11 -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
@@ -92,7 +85,7 @@ build CMakeFiles/Project3.dir/leaderboard.cpp.o: CXX_COMPILER__Project3_Debug /U
 #############################################
 # Link the executable Project3
 
-build Project3: CXX_EXECUTABLE_LINKER__Project3_Debug CMakeFiles/Project3.dir/main.cpp.o CMakeFiles/Project3.dir/board.cpp.o CMakeFiles/Project3.dir/tile.cpp.o CMakeFiles/Project3.dir/texturemanager.cpp.o CMakeFiles/Project3.dir/leaderboard.cpp.o | /opt/homebrew/lib/libsfml-graphics.2.5.1.dylib /opt/homebrew/lib/libsfml-audio.2.5.1.dylib /opt/homebrew/lib/libsfml-network.2.5.1.dylib /opt/homebrew/lib/libsfml-window.2.5.1.dylib /opt/homebrew/lib/libsfml-system.2.5.1.dylib
+build Project3: CXX_EXECUTABLE_LINKER__Project3_Debug CMakeFiles/Project3.dir/main.cpp.o CMakeFiles/Project3.dir/board.cpp.o CMakeFiles/Project3.dir/tile.cpp.o CMakeFiles/Project3.dir/leaderboard.cpp.o | /opt/homebrew/lib/libsfml-graphics.2.5.1.dylib /opt/homebrew/lib/libsfml-audio.2.5.1.dylib /opt/homebrew/lib/libsfml-network.2.5.1.dylib /opt/homebrew/lib/libsfml-window.2.5.1.dylib /opt/homebrew/lib/libsfml-system.2.5.1.dylib
   FLAGS = -std=c++11 -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk
   LINK_LIBRARIES = -Wl,-rpath,/opt/homebrew/lib  /opt/homebrew/lib/libsfml-graphics.2.5.1.dylib  /opt/homebrew/lib/libsfml-audio.2.5.1.dylib  /opt/homebrew/lib/libsfml-network.2.5.1.dylib  /opt/homebrew/lib/libsfml-window.2.5.1.dylib  /opt/homebrew/lib/libsfml-system.2.5.1.dylib
   OBJECT_DIR = CMakeFiles/Project3.dir

@@ -48,6 +48,7 @@ Board::Board() {
     else if (!revealedTile.loadFromFile("../files/images/tile_revealed.png"))
         cout << "Error" << endl;
 
+    loadFromFile("../files/board_config.cfg");
     faceSprite.setTexture(faceHappy);
     faceSprite.move(Vector2f(((cols / 2.0) * 32) - 32, 32 * (rows + 0.5f)));
     debugSprite.setTexture(debug);
@@ -68,7 +69,6 @@ Board::Board() {
 
 // destructor
 Board::~Board() {
-    // FIXME: correct this hardcoding
     for (int i = 0; i < rows; i++) {
         for(int j = 0; j < cols; j++) {
             delete tiles[i][j];
@@ -83,7 +83,6 @@ Tile* Board::getTile(int row, int column) {
 
 // mutators
 void Board::setNeighbors() {
-    // FIXME: correct this hardcoding
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
             vector<Tile*> neighbors;
@@ -169,7 +168,6 @@ void Board::setSprite(sf::Sprite* sprite, sf::Texture &texture) {
 
 void Board::drawBoard(RenderWindow &window) {
     window.clear(Color::White);
-    // FIXME: correct this hardcoding
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
             Tile* tile = tiles[i][j];
@@ -249,7 +247,6 @@ void Board::drawBoard(RenderWindow &window) {
 
 void Board::updateScore() {
     int flagged = 0;
-    // FIXME: correct this hardcoding
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
             Tile* tile = tiles[i][j];
@@ -265,12 +262,10 @@ void Board::updateScore() {
         scoreSprite1.setTextureRect(IntRect(210, 0, 21, 32));
     }
     else {
-        // FIXME: correct this hardcoding
         int first = hundreds - 48;
         scoreSprite1.setTextureRect(IntRect(first * 21, 0, 21, 32));
     }
     char tens = score[1];
-    // FIXME: correct this hardcoding
     int second = tens - 48;
     scoreSprite2.setTextureRect(IntRect(second * 21, 0, 21, 32));
     char ones = score[2];
@@ -281,7 +276,6 @@ void Board::updateScore() {
 void Board::addScore(int amount) {
     srand(time(nullptr));
     while (numMines < maxNumMines) {
-        // FIXME: correct this hardcoding
         int i = rand() % rows;
         int j = rand() % cols;
         Tile* tile = tiles[i][j];
@@ -297,7 +291,6 @@ void Board::addScore(int amount) {
 void Board::generateMines() {
     srand(time(nullptr));
     while (numMines < maxNumMines) {
-        // FIXME: correct this hardcoding
         int i = rand() % rows;
         int j = rand() % cols;
         Tile* tile = tiles[i][j];
@@ -313,10 +306,8 @@ void Board::generateMines() {
 void Board::setup() {
     isLost = false;
     isWon = false;
-    // FIXME: correct this hardcoding
     remainingTiles = rows * cols;
     setSprite(&faceSprite, faceHappy);
-    // FIXME: correct this hardcoding
     loadFromFile("../files/board_config.cfg");
     numMines = 0;
     generateMines();
@@ -353,15 +344,12 @@ void Board::loadFromFile(string file) {
 
 void Board::onClick(int x, int y, string clickType) {
 
-    // FIXME: correct this hardcoding
-    // REMOVE ME
-    cout << "x: " << x << " y: " << y << endl;
     if (y > (32 * rows + 0.5f) && y < (32 * (rows + 0.5f) + 66)) {
         if ( x >= (((cols / 2.0) * 32) - 32) && x <= ((cols / 2.0) * 32 + 34)) {
             setup();
         }
 
-        if (x >= (64 * 8) && x <= (64 * 9) && !isLost && !isWon) {
+        if (x >= ((cols * 32) - 304) && x < ((cols * 32) - 238) && !isLost && !isWon) {
             if (isDebug)
                 isDebug = false;
             else
@@ -448,4 +436,5 @@ void Board::winGame() {
             }
         }
     }
+    displayLeaderboard(16 * cols, rows * 32 - 110);
 }
