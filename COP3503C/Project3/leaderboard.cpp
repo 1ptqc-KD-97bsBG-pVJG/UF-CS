@@ -2,6 +2,7 @@
 #include <cctype>
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <fstream>
 #include "leaderboard.h"
 using namespace std;
@@ -20,12 +21,14 @@ int displayLeaderboard(int windowWidth, int windowHeight) {
     int lineIterator = 1;
     while (getline(leaderboardFile, line)) {
         string formattedLine;
-        int postition = line.find(",");
-        formattedLine = to_string(lineIterator) + ".\t" + line.substr(0, postition) + "\t" + line.substr(postition + 1, line.length());
+        int position = line.find(",");
+        formattedLine = to_string(lineIterator) + ".\t" + line.substr(0, position) + "\t" + line.substr(position + 1, line.length());
         leaderboard.push_back(formattedLine);
         lineIterator++;
     }
     leaderboardFile.close();
+
+    float columnSpacing = windowWidth / 5.0f;
 
     sf::RenderWindow leaderboardWindow(sf::VideoMode(windowWidth, windowHeight), "Minesweeper");
     // Load the font
@@ -49,19 +52,28 @@ int displayLeaderboard(int windowWidth, int windowHeight) {
     leaderboardWindow.draw(leaderboardTitle);
 
     for (int i = 0; i < leaderboard.size(); i++) {
-        // display leaderboard text on screen
-        // FIXEME: fix sizing and positioning
-        // FIXME: needs to be centered too
-        sf::Text leaderboardText(leaderboard[i], font, 18);
-        leaderboardText.setFillColor(sf::Color::White);
-        sf::FloatRect leaderboardTextBounds = leaderboardText.getLocalBounds();
-        leaderboardText.setOrigin(leaderboardTextBounds.left + leaderboardTextBounds.width / 2.0f,
-                                  leaderboardTextBounds.top + leaderboardTextBounds.height / 2.0f);
-        leaderboardText.setPosition(leaderboardWindow.getSize().x / 2.0f, leaderboardWindow.getSize().y / 2.0f - 80 + (i * 60)); // Increased vertical spacing between items
+        stringstream ss(leaderboard[i]);
+        string position, time, name;
+        getline(ss, position, '\t');
+        getline(ss, time, '\t');
+        getline(ss, name);
 
-        leaderboardWindow.draw(leaderboardText);
+        sf::Text positionText(position, font, 18);
+        positionText.setFillColor(sf::Color::White);
+        positionText.setPosition(columnSpacing * 1.2, leaderboardWindow.getSize().y / 2.0f - 80 + (i * 60));
+
+        sf::Text timeText(time, font, 18);
+        timeText.setFillColor(sf::Color::White);
+        timeText.setPosition(columnSpacing * 2, leaderboardWindow.getSize().y / 2.0f - 80 + (i * 60));
+
+        sf::Text nameText(name, font, 18);
+        nameText.setFillColor(sf::Color::White);
+        nameText.setPosition(columnSpacing * 3.2, leaderboardWindow.getSize().y / 2.0f - 80 + (i * 60));
+
+        leaderboardWindow.draw(positionText);
+        leaderboardWindow.draw(timeText);
+        leaderboardWindow.draw(nameText);
     }
-
 
     leaderboardWindow.display();
 
