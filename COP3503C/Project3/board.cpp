@@ -48,7 +48,6 @@ Board::Board() {
     else if (!revealedTile.loadFromFile("../files/images/tile_revealed.png"))
         cout << "Error" << endl;
 
-
     faceSprite.setTexture(faceHappy);
     faceSprite.move(Vector2f(((cols / 2.0) * 32) - 32, 32 * (rows + 0.5f)));
     debugSprite.setTexture(debug);
@@ -369,11 +368,9 @@ void Board::onClick(int x, int y, string clickType) {
                 isDebug = true;
         }
         // pause button functionality
-        else if (x >= (cols * 32 - 304) && x < (cols * 32 - 238) && !isLost && !isWon) {
+        else if (x >= (cols * 32 - 240) && x < (cols * 32 - 174) && !isLost && !isWon) {
             if (isPaused) {
                 isPaused = false;
-                // REMOVE ME
-                cout << "game unpaused" << endl;
             } else {
                 isPaused = true;
             }
@@ -390,7 +387,6 @@ void Board::onClick(int x, int y, string clickType) {
         if (clickType == "left") {
             if (!temp->getIsFlagged() && !temp->getIsShown()) {
                 onReveal(temp);
-                cout << "attempting to reveal tile..." << endl;
             }
         } else if (clickType == "right") {
             toggleFlag(temp);
