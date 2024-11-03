@@ -1,0 +1,19 @@
+{
+  "files.associations": {
+    "*.erb": "erb",
+    "string": "cpp",
+    "__locale": "cpp",
+    "locale": "cpp",
+    "filesystem": "cpp",
+    "__bit_reference": "cpp",
+    "__hash_table": "cpp",
+    "__split_buffer": "cpp",
+    "array": "cpp",
+    "deque": "cpp",
+    "iterator": "cpp",
+    "string_view": "cpp",
+    "unordered_map": "cpp",
+    "vector": "cpp",
+    "__tuple": "cpp"
+  }
+}
