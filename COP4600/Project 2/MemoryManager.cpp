@@ -19,7 +19,7 @@
   }
 
 
-  
+
 // allocate:
 void* MemoryManager::allocate(size_t, sizeInBytes){
   // errenesto discusses more at 25:00
@@ -30,7 +30,13 @@ void MemoryManager::free(void *address){
 
 }
 
-
+void MemoryManager::initialize(size_t sizeInWords){
+  // return error if greater than 65536
+  if(sizeInWords > 65536){
+    return;
+  }
+  // TODO: implement initialize
+}
 
 unsigned MemoryManager::getWordSize(){
   return wordSize;
@@ -60,3 +66,4 @@ void* MemoryManager::getBitmap(){
   // temporary implementation for testing
   return nullptr;
 }
+
