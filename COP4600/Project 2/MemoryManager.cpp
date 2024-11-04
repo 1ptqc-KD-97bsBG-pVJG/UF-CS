@@ -70,6 +70,44 @@ void* MemoryManager::allocate(size_t sizeInBytes){
 
 // free:
 void MemoryManager::free(void *address){
+  if (memoryStart == nullptr || address == nullptr) {
+    return;
+  }
+
+  size_t offsetBytes = static_cast<uint8_t*>(address) - static_cast<uint8_t*>(memoryStart);
+  if (offsetBytes % wordSize != 0) {
+    return;
+  }
+
+  size_t offsetWords = offsetBytes / wordSize;
+  auto it = find_if(blocks.begin(), blocks.end(), [offsetWords](const Block& block) {
+    return block.offset == offsetWords && !block.isFree;
+  });
+
+  if (it == blocks.end()) {
+    return;
+  }
+
+  it->isFree = true;
+
+  // Merge with previous block if it is free
+  if (it != blocks.begin()) {
+    auto prevIt = prev(it);
+    if (prevIt->isFree) {
+      prevIt->length += it->length;
+      it = blocks.erase(it);
+      it = prevIt;
+    }
+  }
+
+  // Merge with next block if it is free
+  if (it + 1 != blocks.end()) {
+    auto nextIt = it + 1;
+    if (nextIt->isFree) {
+      it->length += nextIt->length;
+      blocks.erase(nextIt);
+    }
+  }
 
 }
 
