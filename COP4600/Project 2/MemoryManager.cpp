@@ -119,6 +119,36 @@ void MemoryManager::initialize(size_t sizeInWords){
   // TODO: implement initialize
 }
 
+void *MemoryManager::getList(){
+  if (memoryStart == nullptr) {
+    return nullptr;
+  }
+
+  size_t numHoles = 0;
+  for (const auto& block : blocks) {
+    if (block.isFree) {
+      numHoles++;
+    }
+  }
+
+  if (numHoles == 0) {
+    return nullptr;
+  }
+
+  size_t arraySize = 1 + numHoles * 2;
+  uint16_t* holeList = new uint16_t[arraySize];
+  holeList[0] = static_cast<uint16_t>(numHoles);
+  
+  size_t i = 1;
+  for (const auto& block : blocks) {
+    if (block.isFree) {
+      holeList[i++] = static_cast<uint16_t>(block.offset);
+      holeList[i++] = static_cast<uint16_t>(block.length);
+    }
+  }
+  return holeList;
+}
+
 unsigned MemoryManager::getWordSize(){
   return wordSize;
 }
