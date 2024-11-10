@@ -3,6 +3,7 @@
 
 #include <functional>
 #include <vector>
+using namespace std;
 
 
 int bestFit(int sizeInWords, void* list);
@@ -13,7 +14,7 @@ class MemoryManager {
 
     // Constructor; sets native word size (in bytes, for alignment) and default allocator for finding a memory hole.
       // ● Store wordSize and the passed in default allocator function as member variables.
-    MemoryManager(unsigned wordSize, std::function<int(int, void *)> allocator);
+    MemoryManager(unsigned wordSize, function<int(int, void *)> allocator);
     
     // Releases all memory allocated by this object without leaking memory.
       // ● Deletes all heap memory when the object falls out of scope. Never call the destructor directly.
@@ -44,7 +45,7 @@ class MemoryManager {
     // Very important function
     void free(void *address);
 
-    void setAllocator(std::function<int(int, void*)> allocator);
+    void setAllocator(function<int(int, void*)> allocator);
 
     // Returns an array of information (in decimal) about holes for use by the allocator function (little-Endian). Offset and length are in words. If no memory has been allocated, the function should return a NULL pointer. Example: [3, 0, 10, 12, 2, 20, 6]
       // ● Returns a pointer to the start of a 2-byte array containing the list of holes in [offset, length] format. The first array element is the number of holes in the list.
@@ -89,7 +90,7 @@ class MemoryManager {
 
   private:
     unsigned wordSize;
-    std::function<int(int, void*)> allocatorFunction;
+    function<int(int, void*)> allocatorFunction;
     void* memoryStart;
     size_t memoryLimit;
 
@@ -100,7 +101,7 @@ class MemoryManager {
       bool isFree;
     };
 
-    std::vector<Block> blocks;
+    vector<Block> blocks;
 
 };
 

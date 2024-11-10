@@ -2,6 +2,16 @@
 
 using namespace std;
 
+
+// Constructor
+MemoryManager::MemoryManager(unsigned wordSize, function<int(int, void*)> allocator)
+  : wordSize(wordSize), allocatorFunction(allocator), memoryStart(nullptr), memoryLimit(0) {}
+
+// Destructor
+MemoryManager::~MemoryManager(){
+  shutdown();
+}
+
   // allocator functions, do not belong to MemoryManager class:
 
   // Returns word offset of hole selected by the best fit memory allocation algorithm, and -1 if there is no fit.
@@ -11,24 +21,57 @@ using namespace std;
     // sizeInWords.
     // ● Returns word offset to the start of that hole.
   int bestFit(int sizeInWords, void *list){
+    int wordOffset = -1;
+    uint16_t* holeList = static_cast<uint16_t*>(list);
+    uint16_t holeListLength = *holeList++;
+    uint16_t minSize = UINT16_MAX;
+    uint16_t currentHoleSize = 0;
 
+    // iterate through the list of holes
+    for (uint16_t i = 1; i < holeListLength * 2; i += 2) {
+      currentHoleSize = holeList[i];
+      if (currentHoleSize >= sizeInWords && currentHoleSize < minSize) {
+        wordOffset = holeList[i - 1];
+        minSize = currentHoleSize;
+      }
+    }
+
+    return wordOffset;
   }
 
   // Returns word offset of hole selected by the worst fit memory allocation algorithm, and -1 if there is no fit.
     // ● Same as above, but finds largest possible hole instead.
   int worstFit(int sizeInWords, void *list){
+    int wordOffset = -1;
+    uint16_t* holeList = static_cast<uint16_t*>(list);
+    uint16_t holeListLength = *holeList++;
 
+    uint16_t maxSize = 0;
+    uint16_t currentHoleSize = 0;
+    for (uint16_t i = 1; i < holeListLength * 2; i += 2) {
+      currentHoleSize = holeList[i];
+      if (currentHoleSize >= sizeInWords && currentHoleSize > maxSize) {
+        wordOffset = holeList[i - 1];
+        maxSize = currentHoleSize;
+      }
+    }
+
+    return wordOffset;
   }
 
-
+void MemoryManager::setAllocator(std::function<int(int, void*)> allocator){
+  allocatorFunction = allocator;
+}
 
 // allocate:
 void* MemoryManager::allocate(size_t sizeInBytes){
-  if (memoryStart == nullptr || sizeInBytes == 0) {
+  if (memoryStart == nullptr || sizeInBytes <= 0) {
     return nullptr;
   }
 
-  size_t sizeInWords = (sizeInBytes + wordSize - 1) / wordSize;
+  int currentWordSize = static_cast<int>(wordSize);
+
+  size_t sizeInWords = (sizeInBytes + currentWordSize - 1) / currentWordSize;
   uint16_t* holeList = static_cast<uint16_t*>(getList());
   
   if (holeList == nullptr) {
@@ -117,6 +160,28 @@ void MemoryManager::initialize(size_t sizeInWords){
     return;
   }
   // TODO: implement initialize
+
+  if (memoryStart != nullptr) {
+    shutdown();
+  }
+  memoryLimit = sizeInWords * wordSize;
+  memoryStart = malloc(memoryLimit);
+  if (memoryStart == nullptr) {
+    return;
+  }
+
+  blocks.clear();
+  Block initialBlock = {0, sizeInWords, true};
+  blocks.push_back(initialBlock);
+}
+
+void MemoryManager::shutdown(){
+  if (memoryStart != nullptr) {
+    free(memoryStart);
+    memoryStart = nullptr;
+    memoryLimit = 0;
+    blocks.clear();
+  }
 }
 
 void *MemoryManager::getList(){
@@ -159,6 +224,7 @@ void* MemoryManager::getMemoryStart(){
 
 unsigned MemoryManager::getMemoryLimit(){
   // TODO: convert sizeInWords to bytes
+  return memoryLimit;
 }
 
 
