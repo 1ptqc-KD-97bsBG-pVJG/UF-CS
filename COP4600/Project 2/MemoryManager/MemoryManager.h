@@ -37,7 +37,7 @@ class MemoryManager {
   private:
     unsigned wordSize;
     function<int(int, void*)> allocatorFunction;
-    void* memoryStart;
+    uint8_t* memoryStart;
     size_t memoryLimit;
 
     // structure to represent memory block
