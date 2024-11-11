@@ -164,7 +164,8 @@ void MemoryManager::initialize(size_t sizeInWords) {
     if (sizeInWords > 65536) {
         return;
     }
-
+    
+    shutdown();
     memoryLimit = sizeInWords * wordSize;
     // allocate memory (!!!)
     memoryStart = new uint8_t[memoryLimit];
