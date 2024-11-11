@@ -155,13 +155,14 @@ void MemoryManager::free(void *address){
 
 void MemoryManager::initialize(size_t sizeInWords){
   // return error if greater than 65536 (given in slides or discussion)
+  if (memoryStart != nullptr) {
+    shutdown();
+  }
+
   if(sizeInWords > 65536){
     return;
   }
   
-  if (memoryStart != nullptr) {
-    shutdown();
-  }
   memoryLimit = sizeInWords * wordSize;
   // allocate memory (!!!)
   memoryStart = new uint8_t[memoryLimit];
